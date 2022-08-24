@@ -4,6 +4,6 @@ interface UserContextInterface {
   isLoggedIn: boolean;
 }
 
-export const userContext = createContext<UserContextInterface>({
+export const UserContext = createContext<UserContextInterface>({
   isLoggedIn: false,
 });

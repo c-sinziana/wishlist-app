@@ -1,17 +1,25 @@
+import { List } from "@mui/material";
 import React from "react";
 import "./App.css";
 
+import { Title } from "./components/atoms/Title";
+import Navbar from "./components/templates/NavbarTemplate";
+import { LoginPage } from "./components/pages/LoginPage";
+
 import { RegisterAccountPage } from "./components/pages/RegisterAccountPage";
-import { userContext } from "./hooks/context";
+
+import ItemButtonsTemplate from "./components/templates/ItemButtonsTemplate";
+
+import { UserContext } from "./hooks/context/context";
+import { WishlistRouter } from "./routes/routes";
 
 function App() {
-  const loggedUser = React.useContext(userContext);
-  //daca API-ul de login returneaza codul 200, deci token-ul JWT de autentificare
-  //loggedUser.isLoggedIn = true;
+  const loggedUser = React.useContext(UserContext);
 
   return (
     <div className="App">
-      <RegisterAccountPage />
+      <Navbar />
+      <WishlistRouter />
     </div>
   );
 }

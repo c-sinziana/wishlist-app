@@ -28,15 +28,24 @@ declare module "@mui/material/Button" {
 }
 
 type NavigationButtonProp = {
+  buttonType: "button" | "submit" | "reset" | undefined;
   buttonText: string;
+  onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
 };
 
 export const NavigationButton: React.FC<NavigationButtonProp> = ({
+  buttonType,
   buttonText,
+  onClick,
 }: NavigationButtonProp): React.ReactElement => {
   return (
     <ThemeProvider theme={theme}>
-      <Button variant="contained" color="custom">
+      <Button
+        type={buttonType}
+        variant="contained"
+        color="custom"
+        onClick={onClick}
+      >
         {buttonText}
       </Button>
     </ThemeProvider>
