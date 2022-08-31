@@ -18,13 +18,15 @@
 //ActionUserButtonAtom - AUBA
 //NavigationButtonAtom - NBA
 
-import React, { Profiler } from "react";
-import { Routes, BrowserRouter, Route, Navigate } from "react-router-dom";
+import React, { Profiler, useState } from "react";
+import { Routes, Link, Route, Navigate } from "react-router-dom";
 import { LoginPage } from "../components/pages/LoginPage";
 import { RegisterAccountPage } from "../components/pages/RegisterAccountPage";
 import ItemButtonsTemplate from "../components/templates/ItemButtonsTemplate";
 import { UserContext } from "../hooks/context/context";
 import ProfilePage from "../components/pages/ProfilePage";
+import NewWishlistPage from "../components/pages/NewWishlistPage";
+import MyGroupsPage from "../components/pages/MyGroupsPage";
 
 type RestrictedRouteProps = {
   MyComponent: React.FC;
@@ -33,26 +35,26 @@ type RestrictedRouteProps = {
 const RestrictedRoute: React.FC<RestrictedRouteProps> = ({
   MyComponent,
 }: RestrictedRouteProps) => {
-  const loggedUser = React.useContext(UserContext);
+  const isLoginToken = localStorage.getItem("token");
 
-  console.log("Contextul meu este: " + loggedUser.isLoggedIn);
-  return loggedUser.isLoggedIn === true ? <MyComponent /> : <Navigate to="/" />;
+  console.log(isLoginToken);
+
+  return isLoginToken !== null ? <MyComponent /> : <Navigate to="/" />;
 };
 
 export const WishlistRouter = () => {
-  const loggedUser = React.useContext(UserContext);
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterAccountPage />} />
-        <Route
-          path="/itemButton"
-          element={<RestrictedRoute MyComponent={ItemButtonsTemplate} />}
-        />
-        <Route path="/profile" element={<ProfilePage />} />
-      </Routes>
-    </BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterAccountPage />} />
+      <Route
+        path="/home"
+        element={<RestrictedRoute MyComponent={ItemButtonsTemplate} />}
+      />
+      <Route path="/profile" element={<ProfilePage />} />
+      <Route path="/new-wishlist" element={<NewWishlistPage />} />
+      <Route path="/my-groups" element={<MyGroupsPage />} />
+    </Routes>
   );
 };

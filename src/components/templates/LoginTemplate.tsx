@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button, TextField } from "@mui/material";
-import * as ErrorMessages from "../../constants/errors";
-import * as Validators from "../../constants/validators";
+import { ErrorMessages } from "../../constants/ErrorMessages";
+import { Validators } from "../../constants/Validators";
 import { NavigationButton } from "../atoms/NavigationButton";
 import { UserContext } from "../../hooks/context/context";
 
@@ -16,19 +16,21 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
     control,
     handleSubmit,
     getValues,
-    formState: { errors, isSubmitSuccessful },
+    formState: { errors, isSubmitSuccessful, isValid},
     reset,
   } = useForm<FormInput>({ defaultValues: { email: "", password: "" } });
-  const loggedUser = React.useContext(UserContext);
 
   React.useEffect(() => {
     reset({
       email: "",
       password: "",
     });
-    console.log("Contextul meu pe login este: " + loggedUser.isLoggedIn);
 
-    loggedUser.isLoggedIn = true;
+    console.log("Muie dinamo: ", isSubmitSuccessful);
+
+    if (isSubmitSuccessful === true && isValid === true) {
+      localStorage.setItem("token", JSON.stringify("tokenContent"));
+    }
   }, [isSubmitSuccessful]);
 
   const onSubmit = (data: FormInput) => {
@@ -66,7 +68,7 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
             value={field.value}
             onChange={field.onChange}
             error={errors.email ? true : false}
-            helperText={errors.email && "Email isn't valid"}
+            helperText={errors.email && ErrorMessages.EMAIL_ERROR}
           />
         )}
       />
@@ -95,7 +97,7 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
             value={field.value}
             onChange={field.onChange}
             error={errors.password ? true : false}
-            helperText={errors.password && "Password isn't valid"}
+            helperText={errors.password && ErrorMessages.PASSWORD_ERROR}
           />
         )}
       />
@@ -103,7 +105,8 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
       <NavigationButton
         buttonType="submit"
         buttonText="Login"
-        onClick={() => console.log("Apas register")}
+        onClickLogic={console.log("Apas register")}
+        to="/"
       />
     </form>
   );

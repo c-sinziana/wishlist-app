@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "@mui/material";
 import { createTheme, Theme, ThemeProvider } from "@mui/material/styles";
+import { useNavigate } from "react-router-dom";
 
 const theme: Theme = createTheme({
   palette: {
@@ -30,21 +31,28 @@ declare module "@mui/material/Button" {
 type NavigationButtonProp = {
   buttonType: "button" | "submit" | "reset" | undefined;
   buttonText: string;
-  onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  onClickLogic: any;
+  to: string;
 };
 
 export const NavigationButton: React.FC<NavigationButtonProp> = ({
   buttonType,
   buttonText,
-  onClick,
+  onClickLogic,
+  to,
 }: NavigationButtonProp): React.ReactElement => {
+  const navigate = useNavigate();
+
   return (
     <ThemeProvider theme={theme}>
       <Button
         type={buttonType}
         variant="contained"
         color="custom"
-        onClick={onClick}
+        onClick={() => {
+          onClickLogic;
+          navigate(to);
+        }}
       >
         {buttonText}
       </Button>

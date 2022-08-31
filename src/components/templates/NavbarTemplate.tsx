@@ -11,12 +11,19 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
 import { Chat } from "@mui/icons-material";
+import { Router, useNavigate } from "react-router-dom";
 
 import MenuDrawer from "../organisms/MenuDrawer";
 import MenuItems from "./MenuItemsTemplate";
 import SearchBar from "../atoms/Search";
+import { LinkBehavior } from "../atoms/LinkBehavior";
+import { Link } from "react-router-dom";
+import ProfilePage from "../pages/ProfilePage";
+import { profile } from "console";
 
 export default function Navbar() {
+  const navigate = useNavigate()
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -87,14 +94,14 @@ export default function Navbar() {
         <Toolbar>
           <MenuDrawer />
           <Typography fontSize="1.7rem" fontFamily="monospace" sx={{ mr: 2 }}>
-            iWish
+            IWish
           </Typography>
           <SearchBar />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton size="large" color="inherit">
               <Badge color="error">
-                <Chat />
+                <Chat onClick={() => navigate("/my-groups")}/>
               </Badge>
             </IconButton>
             <IconButton size="large" color="inherit">
@@ -108,7 +115,7 @@ export default function Navbar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <AccountCircle onClick={() => navigate("/profile")}/>
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
