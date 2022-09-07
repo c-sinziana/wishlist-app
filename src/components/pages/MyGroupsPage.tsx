@@ -1,9 +1,10 @@
 import React from "react";
+import AllGroupsCard from "../organisms/AllGroupsCard";
 
 const MyGroupsPage = () => {
   return (
     <div>
-      <p> This is going to be the chat page</p>
+      <AllGroupsCard />
     </div>
   );
 };

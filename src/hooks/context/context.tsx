@@ -4,9 +4,10 @@ interface UserContextInterface {
   isLoggedIn: boolean;
 }
 
-export const UserContext = createContext<UserContextInterface>({
-  isLoggedIn: false,
-});
+export const UserContext: React.Context<UserContextInterface> =
+  createContext<UserContextInterface>({
+    isLoggedIn: false,
+  });
 
 /*
 import { createContext, useContext } from "react";

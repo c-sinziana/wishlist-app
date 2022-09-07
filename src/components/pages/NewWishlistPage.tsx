@@ -1,9 +1,11 @@
 import React from "react";
+import CreateNewWishlist from "../templates/CreateNewWishlist";
 
 const NewWishlistPage = () => {
   return (
     <div>
-      <p> This is the new wishlist page!</p>
+      <h2> Create new wishlist: </h2>
+      <CreateNewWishlist />
     </div>
   );
 };

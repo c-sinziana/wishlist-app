@@ -1,240 +1,238 @@
 import * as React from "react";
 import { useForm, Controller } from "react-hook-form";
-import { Button, Grid, TextField } from "@mui/material";
+import { Alert, Button, Grid, TextField } from "@mui/material";
+
 import { ErrorMessages } from "../../constants/ErrorMessages";
 import { Validators } from "../../constants/Validators";
-import { NavigationButton } from "../atoms/NavigationButton";
-import { Description } from "../atoms/Description";
-import { Navigate, useNavigate } from "react-router-dom";
-import { RegisterApi, RegisterResponse } from "../../api/RegisterApi";
-import { Email, Password } from "@mui/icons-material";
-
-type FormInput = {
-  emailInput: string;
-  passwordInput: string;
-  dobInput: string;
-  nameInput: string;
-  phoneInput: string;
-};
+import { RegisterApi, RegisterPostRequest } from "../../api/RegisterApi";
 
 export const RegisterTemplate: React.FC = (): React.ReactElement => {
-  const navigate = useNavigate();
   const {
     control,
     handleSubmit,
-    getValues,
     formState: { errors, isSubmitSuccessful },
     reset,
-  } = useForm<FormInput>({
+  } = useForm<RegisterPostRequest>({
     defaultValues: {
-      emailInput: "",
-      passwordInput: "",
-      dobInput: "",
-      nameInput: "",
-      phoneInput: "",
+      email: "",
+      password: "",
+      dob: "",
+      name: "",
+      phone: "",
     },
   });
 
-  React.useEffect(() => {
-    reset({
-      emailInput: "",
-      passwordInput: "",
-      dobInput: "",
-      nameInput: "",
-      phoneInput: "",
+  const [registerResponseData, setRegisterResponseData] =
+    React.useState<RegisterPostRequest>({
+      email: "",
+      password: "",
+      dob: "",
+      name: "",
+      phone: "",
     });
+  const [isResponseSuccesful, setIsResponseSuccessful] =
+    React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    async function registerFunction() {
+      await registerFetcher(registerResponseData);
+    }
 
     if (isSubmitSuccessful == true) {
-      navigate("/home");
+      registerFunction();
     }
+
+    reset({
+      email: "",
+      password: "",
+      dob: "",
+      name: "",
+      phone: "",
+    });
   }, [isSubmitSuccessful]);
 
-  const onSubmit = async (data: FormInput) => {
-    console.log(data);
+  const onSubmit = async (data: RegisterPostRequest) => {
+    setRegisterResponseData(data);
   };
 
-  const [token, setToken] = React.useState<RegisterResponse>();
-  /*
-  let values = getValues("firstName");
-  console.log("Valoarea: ", values);
-  */
-
-  const registerApi = async () =>
-    RegisterApi.postRegister({
-      email: getValues("emailInput"),
-      password: getValues("passwordInput"),
-      dob: getValues("dobInput"),
-      name: getValues("nameInput"),
-      phone: getValues("phoneInput"),
-    })
+  const registerFetcher = async (bodyData: RegisterPostRequest) => {
+    await RegisterApi.postRegister(bodyData)
       .then((data) => {
-        setToken(data);
-        console.log("Token is: ", token);
+        if (data.id !== undefined && data.errors === undefined) {
+          setIsResponseSuccessful(true);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
+  };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid
-        container
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-      >
-        <Controller
-          control={control}
-          name="nameInput"
-          rules={{
-            required: true,
-          }}
-          render={({ field }) => (
-            <TextField
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                "& > *": {
-                  m: 1,
-                },
+    <>
+      {isResponseSuccesful === false ? (
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid
+            container
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Controller
+              control={control}
+              name="name"
+              rules={{
+                required: true,
               }}
-              placeholder="nameInput"
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.nameInput ? true : false}
-              helperText={errors.nameInput && ErrorMessages.REQUIRED_ERROR}
+              render={({ field }) => (
+                <TextField
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    "& > *": {
+                      m: 1,
+                    },
+                  }}
+                  placeholder="name"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.name ? true : false}
+                  helperText={errors.name && ErrorMessages.REQUIRED_ERROR}
+                />
+              )}
             />
-          )}
-        />
-        <Controller
-          control={control}
-          name="dobInput"
-          rules={{
-            required: true,
-          }}
-          render={({ field }) => (
-            <TextField
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                "& > *": {
-                  m: 1,
-                },
+            <Grid
+              container
+              display="flex"
+              flexDirection="row"
+              justifyContent="center"
+            >
+              <Controller
+                control={control}
+                name="phone"
+                rules={{
+                  required: true,
+                }}
+                render={({ field }) => (
+                  <TextField
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      "& > *": {
+                        m: 1,
+                      },
+                    }}
+                    placeholder="phone"
+                    value={field.value}
+                    onChange={field.onChange}
+                    error={errors.phone ? true : false}
+                    helperText={errors.phone && ErrorMessages.REQUIRED_ERROR}
+                  />
+                )}
+              />
+            </Grid>
+            <Controller
+              control={control}
+              name="dob"
+              rules={{
+                required: true,
               }}
-              placeholder="date of birth"
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.dobInput ? true : false}
-              helperText={errors.dobInput && ErrorMessages.REQUIRED_ERROR}
+              render={({ field }) => (
+                <TextField
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    "& > *": {
+                      m: 1,
+                    },
+                  }}
+                  placeholder="date of birth"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.dob ? true : false}
+                  helperText={errors.dob && ErrorMessages.REQUIRED_ERROR}
+                />
+              )}
             />
-          )}
-        />
-      </Grid>
-      <Grid
-        container
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-      >
-        <Controller
-          control={control}
-          name="phoneInput"
-          rules={{
-            required: true,
-          }}
-          render={({ field }) => (
-            <TextField
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                "& > *": {
-                  m: 1,
-                },
-              }}
-              placeholder="phoneInput"
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.phoneInput ? true : false}
-              helperText={errors.phoneInput && ErrorMessages.REQUIRED_ERROR}
-            />
-          )}
-        />
-      </Grid>
+          </Grid>
 
-      <Grid
-        container
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-      >
-        <Controller
-          control={control}
-          name="emailInput"
-          rules={{
-            required: true,
-            pattern: {
-              value: Validators.EMAIL_VALIDATION,
-              message: ErrorMessages.VALIDATION_ERROR,
-            },
-          }}
-          render={({ field }) => (
-            <TextField
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                "& > *": {
-                  m: 1,
+          <Grid
+            container
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Controller
+              control={control}
+              name="email"
+              rules={{
+                required: true,
+                pattern: {
+                  value: Validators.EMAIL_VALIDATION,
+                  message: ErrorMessages.VALIDATION_ERROR,
                 },
               }}
-              placeholder="emailInput"
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.emailInput ? true : false}
-              helperText={errors.emailInput && ErrorMessages.EMAIL_ERROR}
+              render={({ field }) => (
+                <TextField
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    "& > *": {
+                      m: 1,
+                    },
+                  }}
+                  placeholder="email"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.email ? true : false}
+                  helperText={errors.email && ErrorMessages.EMAIL_ERROR}
+                />
+              )}
             />
-          )}
-        />
-      </Grid>
-      <Grid
-        container
-        display="flex"
-        flexDirection="row"
-        justifyContent="center"
-      >
-        <Controller
-          control={control}
-          name="passwordInput"
-          rules={{
-            required: true,
-            pattern: {
-              value: Validators.PASSWORD_VALIDATION,
-              message: ErrorMessages.VALIDATION_ERROR,
-            },
-          }}
-          render={({ field }) => (
-            <TextField
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                "& > *": {
-                  m: 1,
+          </Grid>
+          <Grid
+            container
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+          >
+            <Controller
+              control={control}
+              name="password"
+              rules={{
+                required: true,
+                pattern: {
+                  value: Validators.PASSWORD_VALIDATION,
+                  message: ErrorMessages.VALIDATION_ERROR,
                 },
               }}
-              type="passwordInput"
-              placeholder="passwordInput"
-              value={field.value}
-              onChange={field.onChange}
-              error={errors.passwordInput ? true : false}
-              helperText={errors.passwordInput && ErrorMessages.PASSWORD_ERROR}
+              render={({ field }) => (
+                <TextField
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    "& > *": {
+                      m: 1,
+                    },
+                  }}
+                  type="password"
+                  placeholder="password"
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={errors.password ? true : false}
+                  helperText={errors.password && ErrorMessages.PASSWORD_ERROR}
+                />
+              )}
             />
-          )}
-        />
-      </Grid>
+          </Grid>
 
-      <Button type="submit" onClick={() => console.log("Apas register")}>
-        Register
-      </Button>
-    </form>
+          <Button type="submit" onClick={() => console.log("Apas register")}>
+            Register
+          </Button>
+        </form>
+      ) : (
+        <Alert severity="success">Account succesfully created</Alert>
+      )}
+    </>
   );
 };

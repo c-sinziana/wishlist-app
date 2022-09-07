@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 
-import { instance } from "./utils/instance";
+import { accountInstance } from "./utils/instance";
 import { User } from "./utils/entities";
 
 interface LoginPostRequest {
@@ -11,13 +11,14 @@ interface LoginPostRequest {
 interface LoginPostRespose {
   token: string;
   user: User;
+  errors: [string];
 }
 
 const responseBody = (response: AxiosResponse) => response.data;
 
 const loginRequest = {
   post: (url: string, body: LoginPostRequest) =>
-    instance.post<LoginPostRequest>(url, body).then(responseBody),
+    accountInstance.post<LoginPostRequest>(url, body).then(responseBody),
 };
 
 export const LoginApi = {

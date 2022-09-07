@@ -18,6 +18,7 @@ export type User = {
 };
 
 export type Item = {
+  id: number;
   name: string;
   details: string;
   quantity: number;
@@ -25,31 +26,26 @@ export type Item = {
   maker: string;
   model: string;
   link: string;
-  id: number;
-  uid: number;
 };
 
 export type Wishlist = {
+  id: number;
   name: string;
   details: string;
-  id: number;
-  uid: number;
-  items: [Item];
+  items: Item[];
 };
 
 export type Member = {
+  id: number;
   status: string;
   user: User;
   address: Address;
 };
 
 export type Group = {
+  id: number;
   name: string;
   details: string;
-  id: number;
-  uid: number;
-  wishlists: [Wishlist];
-  members: [Member];
 };
 
 export type Notification = {
@@ -57,7 +53,6 @@ export type Notification = {
   category: string;
   details: string;
   isActive: boolean;
-  uid: number;
 };
 
 export type Me = {
@@ -67,8 +62,7 @@ export type Me = {
   password: string;
   phone: string;
   dob: string;
-  items: [Item];
-  wishlists: [Wishlist];
-  groups: [Group];
-  notifications: [Notification];
+  address: Address;
+  notifications: Notification[];
+  groups: Group[];
 };

@@ -1,8 +1,8 @@
 import { AxiosResponse } from "axios";
 
-import { instance } from "./utils/instance";
+import { accountInstance } from "./utils/instance";
 
-interface RegisterPostRequest {
+export interface RegisterPostRequest {
   email: string;
   password: string;
   dob: string;
@@ -11,14 +11,20 @@ interface RegisterPostRequest {
 }
 
 export interface RegisterResponse {
-  token: string;
+  id: number;
+  updatedAt: string;
+  name: string;
+  email: string;
+  dob: string;
+  phone: string;
+  errors: [string];
 }
 
 const responseBody = (response: AxiosResponse) => response.data;
 
 const registerRequest = {
   post: (url: string, body: RegisterPostRequest) =>
-    instance.post<RegisterPostRequest>(url, body).then(responseBody),
+    accountInstance.post<RegisterPostRequest>(url, body).then(responseBody),
 };
 
 export const RegisterApi = {

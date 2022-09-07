@@ -1,32 +1,17 @@
-// buton Register de tip NBA -> pagina de Create Account;
-// button Login de tip NBA -> pagina de Login (pt utilizatorii care au deja cont);
-// buton de Logout de tip NBA -> redirectioneaza utilizatorul spre prima pagina;
-// buton Create Account de tip AUBA -> pagina de Home daca contul a fost creat cu succes;
-// buton Home de tip NBA -> intoarce utilizatorul pe pagina de Home;
-// button Create New Wishlist de tip NBA -> redirectionare spre o wishlist goala;
-// buton Add New Wishlist de tip NBA -> actualizeaza my wishlists si intoarce user-ul pe pagina de Home;
-// buton Shared with me wishlists de tip AUBA -> directioneaza utilizatorul spre o pagina cu toate wishlist-urile prietenilor;
-// button My wishlists de tip AUBA -> directioneaza utilizatorul spre o pagina cu toate wishlist-urile create de el;
-// button My groups de tip AUBA -> directioneza utilizatorul spre o pagina cu toate grupurile sale;
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
-// C O N T E X T //
-// pagini pentru utilizator neautentificat: Register, Login
-// pagini pentru utilizator autentificat: restul
-
-//Legenda:
-//ActionItemButtonAtom - AIBA
-//ActionUserButtonAtom - AUBA
-//NavigationButtonAtom - NBA
-
-import React, { Profiler, useState } from "react";
-import { Routes, Link, Route, Navigate } from "react-router-dom";
 import { LoginPage } from "../components/pages/LoginPage";
 import { RegisterAccountPage } from "../components/pages/RegisterAccountPage";
-import ItemButtonsTemplate from "../components/templates/ItemButtonsTemplate";
-import { UserContext } from "../hooks/context/context";
 import ProfilePage from "../components/pages/ProfilePage";
-import NewWishlistPage from "../components/pages/NewWishlistPage";
 import MyGroupsPage from "../components/pages/MyGroupsPage";
+import WishlistTemplate from "../components/templates/WishlistTemplate";
+import MyWishlistPage from "../components/pages/MyWishlistPage";
+import { AddNewItemPage } from "../components/pages/AddNewItemPage";
+import AddGroupCard from "../components/organisms/AddGroupCard";
+import NotificationsPage from "../components/pages/NotificationsPage";
+import MyItemsPage from "../components/pages/MyItemsPage";
 
 type RestrictedRouteProps = {
   MyComponent: React.FC;
@@ -35,11 +20,10 @@ type RestrictedRouteProps = {
 const RestrictedRoute: React.FC<RestrictedRouteProps> = ({
   MyComponent,
 }: RestrictedRouteProps) => {
-  const isLoginToken = localStorage.getItem("token");
+  //const loginToken = localStorage.getItem("token");
+  const loginToken = Cookies.get("token");
 
-  console.log(isLoginToken);
-
-  return isLoginToken !== null ? <MyComponent /> : <Navigate to="/" />;
+  return loginToken !== undefined ? <MyComponent /> : <Navigate to="/" />;
 };
 
 export const WishlistRouter = () => {
@@ -50,11 +34,32 @@ export const WishlistRouter = () => {
       <Route path="/register" element={<RegisterAccountPage />} />
       <Route
         path="/home"
-        element={<RestrictedRoute MyComponent={ItemButtonsTemplate} />}
+        element={<RestrictedRoute MyComponent={WishlistTemplate} />}
       />
-      <Route path="/profile" element={<ProfilePage />} />
-      <Route path="/new-wishlist" element={<NewWishlistPage />} />
-      <Route path="/my-groups" element={<MyGroupsPage />} />
+      <Route
+        path="/profile"
+        element={<RestrictedRoute MyComponent={ProfilePage} />}
+      />
+      <Route
+        path="/my-items"
+        element={<RestrictedRoute MyComponent={MyItemsPage} />}
+      />
+      <Route
+        path="/my-wishlist"
+        element={<RestrictedRoute MyComponent={MyWishlistPage} />}
+      />
+      <Route
+        path="/all-groups"
+        element={<RestrictedRoute MyComponent={MyGroupsPage} />}
+      />
+      <Route
+        path="/new-group"
+        element={<RestrictedRoute MyComponent={AddGroupCard} />}
+      />
+      <Route
+        path="/my-notifications"
+        element={<RestrictedRoute MyComponent={NotificationsPage} />}
+      />
     </Routes>
   );
 };
