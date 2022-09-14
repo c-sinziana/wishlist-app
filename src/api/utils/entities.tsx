@@ -4,17 +4,14 @@ export type Address = {
   city: string;
   country: string;
   zip: string;
-  uid: number;
 };
 
 export type User = {
   id: number;
   name: string;
   email: string;
-  password: string;
   phone: string;
   dob: string;
-  address: Address;
 };
 
 export type Item = {
@@ -48,11 +45,10 @@ export type Group = {
   details: string;
 };
 
-export type Notification = {
+export type MyNotification = {
   id: number;
   category: string;
   details: string;
-  isActive: boolean;
 };
 
 export type Me = {
@@ -63,6 +59,6 @@ export type Me = {
   phone: string;
   dob: string;
   address: Address;
-  notifications: Notification[];
+  notifications: MyNotification[];
   groups: Group[];
 };

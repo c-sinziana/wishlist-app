@@ -1,12 +1,12 @@
 import React from "react";
 import { LoginTemplate } from "../templates/LoginTemplate";
-import { Title } from "../atoms/Title";
+import { TitleHeading } from "../atoms/TitleHeading";
 import { LinkBehavior } from "../atoms/LinkBehavior";
 
 export const LoginPage: React.FC = (): React.ReactElement => {
   return (
     <>
-      <Title title="Login" />
+      <TitleHeading title="Login" />
       <LoginTemplate />
       <div>
         <span>

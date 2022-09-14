@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Card, Container, Typography } from "@mui/material";
+import { Button, Card, Container, Typography } from "@mui/material";
 
-import { Me } from "../../api/utils/entities";
+import { Me, Address } from "../../api/utils/entities";
 import { MeApi } from "../../api/MeApi";
 import { Initializers } from "../../constants/Initializers";
+import EditProfileCard from "../molecules/EditProfileCard";
+import { trimDate } from "../../utils/DateUtils";
 
 const ProfileTemplate = () => {
   const [profile, setProfile] = useState<Me>({
@@ -17,6 +19,8 @@ const ProfileTemplate = () => {
     groups: [Initializers.GROUP],
     notifications: [Initializers.NOTIFICATION],
   });
+
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     async function ProfileTemplate() {
@@ -36,12 +40,26 @@ const ProfileTemplate = () => {
       });
   };
 
-  const showDob = (dob: string): string => {
-    let cleanedDbo: string = dob.substring(0, 10);
-    let correctFormatDbo: string = cleanedDbo.split("-").reverse().join("-");
+  const toggleIsEditing = () => setIsEditing(!isEditing);
 
-    return correctFormatDbo;
-  };
+  if (isEditing) {
+    return (
+      <EditProfileCard
+        name={profile.name}
+        email={profile.email}
+        password={profile.password}
+        dob={profile.dob}
+        phone={profile.phone}
+        address={{
+          id: profile.address.id,
+          country: profile.address.country,
+          city: profile.address.city,
+          street: profile.address.street,
+          zip: profile.address.zip,
+        }}
+      />
+    );
+  }
 
   return (
     <Container>
@@ -49,14 +67,16 @@ const ProfileTemplate = () => {
         <Typography>Name: {profile.name}</Typography>
         <Typography>Email: {profile.email}</Typography>
         <Typography>Phone: {profile.phone}</Typography>
-        <Typography>Date of birth: {showDob(profile.dob)}</Typography>
+        <Typography>Date of birth: {trimDate(profile.dob)}</Typography>
         <Typography>Address:</Typography>
         <Typography>Country: {profile.address.country}</Typography>
         <Typography>City: {profile.address.city}</Typography>
         <Typography>Street: {profile.address.street}</Typography>
         <Typography>Zip: {profile.address.zip}</Typography>
-        <Typography>Group name: {profile.groups[0].name}</Typography>
+        <Typography>Latest group's names: {profile.groups[0].name}</Typography>
       </Card>
+
+      <Button onClick={() => toggleIsEditing()}>Edit profile</Button>
     </Container>
   );
 };

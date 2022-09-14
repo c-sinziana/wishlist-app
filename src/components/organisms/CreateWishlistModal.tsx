@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Alert, Box, Button, Modal, TextField } from "@mui/material";
-import { ItemPostPutRequest, ItemApi } from "../../api/ItemApi";
-import { Item } from "../../api/utils/entities";
+
+import { WishlistApi, WishlistPostPutRequest } from "../../api/WishlistApi";
+import ItemsListModal from "./ItemsListModal";
 
 function CreateWishlistModal() {
   const [open, setOpen] = React.useState(false);
@@ -12,33 +13,19 @@ function CreateWishlistModal() {
     setOpen(false);
   };
 
-  const [item, setItem] = useState<Item>({
-    id: 0,
-    name: "",
-    details: "",
-    quantity: 0,
-    size: "",
-    maker: "",
-    model: "",
-    link: "",
-  });
-
   const [name, setName] = useState<string>("");
   const [details, setDetails] = useState<string>("");
-  const [quantity, setQuantity] = useState<number>(1);
-  const [size, setSize] = useState<string>("");
-  const [maker, setMaker] = useState<string>("");
-  const [model, setModel] = useState<string>("");
-  const [link, setLink] = useState<string>("");
+  const [itemIds, setItemIds] = useState<number[]>([]);
 
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
 
-  const createItemFetcher = async (bodyData: ItemPostPutRequest) => {
-    ItemApi.postItem(bodyData)
+  const createWishlistFetcher = async (bodyData: WishlistPostPutRequest) => {
+    console.log("Body data is: ", JSON.stringify(bodyData));
+
+    await WishlistApi.postWishlist(bodyData)
       .then((data) => {
-        if (data.id !== undefined) {
-          setItem(data);
+        if (data !== undefined) {
           setIsResponseSuccessful(true);
         } else {
           setIsResponseSuccessful(false);
@@ -50,12 +37,18 @@ function CreateWishlistModal() {
       });
   };
 
+  const handleAddToWishlist = (clickedItemId: number) => {
+    setItemIds([...itemIds, clickedItemId]);
+    console.log("Clicked item is:", clickedItemId);
+    console.log("Clicked item are:", JSON.stringify(itemIds));
+  };
+
   return (
     <>
       <Button onClick={handleOpen}>Create wishlist!</Button>
       <Modal hideBackdrop open={open} onClose={handleClose}>
         <Box sx={{ ...style, width: 200 }}>
-          <h2 id="child-modal-title">Create new wishlist:</h2>
+          <h2>Create new wishlist:</h2>
           Name:
           <TextField value={name} onChange={(e) => setName(e.target.value)} />
           Details:
@@ -63,17 +56,16 @@ function CreateWishlistModal() {
             value={details}
             onChange={(e) => setDetails(e.target.value)}
           />
+          <ItemsListModal handleAddToWishlist={handleAddToWishlist} />
+          {isResponseSuccesful === true && (
+            <Alert severity="success">Item succesfully added</Alert>
+          )}
           <Button onClick={handleClose}>Close</Button>
           <Button
             onClick={async () => {
-              await createItemFetcher({
-                name,
-                details,
-                quantity,
-                size,
-                maker,
-                model,
-                link,
+              await createWishlistFetcher({
+                wishlist: { name, details },
+                itemIds,
               });
             }}
           >

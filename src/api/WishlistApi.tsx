@@ -8,19 +8,17 @@ import {
   PostPutDeleteResponse,
 } from "./utils/generics";
 
-export interface WishlistPostRequest {
+export interface WishlistPostPutRequest {
   wishlist: {
     name: string;
     details: string;
   };
-  itemIds: [number];
+  itemIds: number[];
 }
 
-export interface WishlistPostResponse {
+export interface WishlistPutPurchaseItemRequest {
   id: number;
-  name: string;
-  details: string;
-  items: Item[];
+  itemId: number;
 }
 
 export interface WishlistGetResponse {
@@ -30,22 +28,31 @@ export interface WishlistGetResponse {
 const responseBody = (response: AxiosResponse) => response.data;
 
 const wishlistRequest = {
-  post: (url: string, body: WishlistPostRequest) =>
-    instance.post<WishlistPostRequest>(url, body).then(responseBody),
+  post: (url: string, body: WishlistPostPutRequest) =>
+    instance.post<WishlistPostPutRequest>(url, body).then(responseBody),
   get: (url: string) => instance.get<GetRequest>(url).then(responseBody),
-  put: (url: string, body: WishlistPostRequest) =>
-    instance.put<PutDeleteRequest>(url).then(responseBody),
+  put: (url: string, body: WishlistPostPutRequest) =>
+    instance.put<PutDeleteRequest>(url, body).then(responseBody),
+  putWishlistItem: (url: string) =>
+    instance.put<WishlistPutPurchaseItemRequest>(url).then(responseBody),
   delete: (url: string) =>
     instance.delete<PutDeleteRequest>(url).then(responseBody),
 };
 
 export const WishlistApi = {
-  postWishlist: (wishlist: WishlistPostRequest): Promise<Wishlist> =>
+  postWishlist: (wishlist: WishlistPostPutRequest): Promise<Wishlist> =>
     wishlistRequest.post("/wishlists", wishlist),
   getWishlists: (): Promise<WishlistGetResponse> =>
     wishlistRequest.get("/wishlists"),
-  putWishlist: (id: number, wishlist: WishlistPostRequest): Promise<Wishlist> =>
-    wishlistRequest.put(`/wishlists/${id}`, wishlist),
+  putWishlist: (
+    id: number,
+    wishlist: WishlistPostPutRequest
+  ): Promise<Wishlist> => wishlistRequest.put(`/wishlists/${id}`, wishlist),
+  putWishlistItemPurchase: (
+    id: number,
+    itemId: number
+  ): Promise<PostPutDeleteResponse> =>
+    wishlistRequest.putWishlistItem(`/wishlists/${id}/items/${itemId}/buy`),
   deleteWishlist: (id: number): Promise<PostPutDeleteResponse> =>
     wishlistRequest.delete(`/wishlists/${id}`),
 };

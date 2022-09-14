@@ -51,17 +51,9 @@ const MenuDrawerTemplate = () => {
               <MenuItem sx={{ ml: 3 }}>
                 <NavigationButton
                   buttonType="submit"
-                  buttonText="My wishlist"
+                  buttonText="My wishlists"
                   onClickLogic={() => {}}
-                  to="/my-wishlist"
-                />
-              </MenuItem>
-              <MenuItem sx={{ ml: 3 }}>
-                <NavigationButton
-                  buttonType="submit"
-                  buttonText="Create new group"
-                  onClickLogic={() => {}}
-                  to="/new-group"
+                  to="/my-wishlists"
                 />
               </MenuItem>
               <MenuItem sx={{ ml: 3 }}>

@@ -1,9 +1,9 @@
 import { Card, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { GroupApi, GroupGetResponse } from "../../api/GroupApi";
-import GroupCard from "../molecules/GroupCard";
+import GroupCard from "./GroupCard";
 
-const AllGroupsCard = () => {
+const GroupsCard = () => {
   const [shownGroups, setShownGroups] = useState<GroupGetResponse>({
     groups: [
       {
@@ -51,4 +51,4 @@ const AllGroupsCard = () => {
   );
 };
 
-export default AllGroupsCard;
+export default GroupsCard;

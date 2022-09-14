@@ -1,13 +1,26 @@
 import { AxiosResponse } from "axios";
-import { Address, Me, Notification } from "./utils/entities";
-import { instance } from "./utils/instance";
-import { PostPutDeleteResponse } from "./utils/generics";
 
-interface MePutRequest {
+import { Address, Me, MyNotification } from "./utils/entities";
+import { instance } from "./utils/instance";
+
+export interface MePutRequest {
   name: string;
   phone: string;
   dob: string;
   address: Address;
+}
+
+export interface MePutResponse {
+  name: string;
+  email: string;
+  password: string;
+  dob: string;
+  phone: string;
+  address: Address;
+}
+
+export interface MeNotificationsGetResponse {
+  notifications: MyNotification[];
 }
 
 const responseBody = (response: AxiosResponse) => response.data;
@@ -21,8 +34,7 @@ const meRequest = {
 
 export const MeApi = {
   getMe: (): Promise<Me> => meRequest.get("/me"),
-  getMeNotifications: (): Promise<Notification[]> =>
+  getMeNotifications: (): Promise<MeNotificationsGetResponse> =>
     meRequest.getNotifications("/me/notifications"),
-  putMe: (me: MePutRequest): Promise<PostPutDeleteResponse> =>
-    meRequest.put(`/me`, me),
+  putMe: (me: MePutRequest): Promise<MePutResponse> => meRequest.put(`/me`, me),
 };

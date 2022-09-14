@@ -1,10 +1,14 @@
 import React from "react";
-import AllGroupsCard from "../organisms/AllGroupsCard";
+import GroupsCard from "../organisms/GroupsCard";
+import CreateGroupModal from "../organisms/CreateGroupModal";
+import { TitleHeading } from "../atoms/TitleHeading";
 
 const MyGroupsPage = () => {
   return (
     <div>
-      <AllGroupsCard />
+      <TitleHeading title="My groups" />
+      <CreateGroupModal />
+      <GroupsCard />
     </div>
   );
 };

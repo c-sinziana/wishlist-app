@@ -1,14 +1,18 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Fab } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { ItemApi } from "../../api/ItemApi";
 
 type DeleteItemButtonProp = {
   id: number;
+  isDeleteItemFromWishlist?: boolean;
 };
 
-const DeleteItemButton = ({ id }: DeleteItemButtonProp) => {
+const DeleteItemButton = ({
+  id,
+  isDeleteItemFromWishlist,
+}: DeleteItemButtonProp) => {
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
 
@@ -23,13 +27,18 @@ const DeleteItemButton = ({ id }: DeleteItemButtonProp) => {
   };
 
   return (
-    <Button
-      variant="outlined"
-      startIcon={<DeleteIcon />}
-      onClick={async () => await itemDeleteFetcher(id)}
-    >
-      Delete
-    </Button>
+    <>
+      {isDeleteItemFromWishlist && (
+        <Fab
+          size="small"
+          color="primary"
+          onClick={async () => await itemDeleteFetcher(id)}
+          sx={{ ml: "2rem" }}
+        >
+          <DeleteIcon />
+        </Fab>
+      )}
+    </>
   );
 };
 

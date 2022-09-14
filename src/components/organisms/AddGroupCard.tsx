@@ -1,3 +1,5 @@
+// Nu cred ca mai e necesara componenta asta
+
 import React, { useState } from "react";
 import { Alert, Card, CardContent, Fab, Grid, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";

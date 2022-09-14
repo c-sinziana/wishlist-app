@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Fab } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { WishlistApi } from "../../api/WishlistApi";
@@ -23,13 +23,13 @@ const DeleteWishlistButton = ({ id }: DeleteWishlistButtonProp) => {
   };
 
   return (
-    <Button
-      variant="outlined"
-      startIcon={<DeleteIcon />}
+    <Fab
+      size="small"
+      color="primary"
       onClick={async () => await wishlistDeleteFetcher(id)}
     >
-      Delete
-    </Button>
+      <DeleteIcon />
+    </Fab>
   );
 };
 

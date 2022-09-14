@@ -8,10 +8,9 @@ import ProfilePage from "../components/pages/ProfilePage";
 import MyGroupsPage from "../components/pages/MyGroupsPage";
 import WishlistTemplate from "../components/templates/WishlistTemplate";
 import MyWishlistPage from "../components/pages/MyWishlistPage";
-import { AddNewItemPage } from "../components/pages/AddNewItemPage";
-import AddGroupCard from "../components/organisms/AddGroupCard";
 import NotificationsPage from "../components/pages/NotificationsPage";
 import MyItemsPage from "../components/pages/MyItemsPage";
+import UsersPage from "../components/pages/UsersPage";
 
 type RestrictedRouteProps = {
   MyComponent: React.FC;
@@ -45,7 +44,7 @@ export const WishlistRouter = () => {
         element={<RestrictedRoute MyComponent={MyItemsPage} />}
       />
       <Route
-        path="/my-wishlist"
+        path="/my-wishlists"
         element={<RestrictedRoute MyComponent={MyWishlistPage} />}
       />
       <Route
@@ -53,12 +52,12 @@ export const WishlistRouter = () => {
         element={<RestrictedRoute MyComponent={MyGroupsPage} />}
       />
       <Route
-        path="/new-group"
-        element={<RestrictedRoute MyComponent={AddGroupCard} />}
-      />
-      <Route
         path="/my-notifications"
         element={<RestrictedRoute MyComponent={NotificationsPage} />}
+      />
+      <Route
+        path="/all-users"
+        element={<RestrictedRoute MyComponent={UsersPage} />}
       />
     </Routes>
   );

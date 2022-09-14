@@ -1,17 +1,8 @@
-import React, { useState, useReducer } from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
-import EditIcon from "@mui/icons-material/Edit";
-import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import {
-  Alert,
-  Button,
-  Fab,
-  Grid,
-  IconButton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Alert, Button, Grid, TextField } from "@mui/material";
+
 import { Item } from "../../api/utils/entities";
 import { ItemApi, ItemPostPutRequest } from "../../api/ItemApi";
 import { PostPutDeleteResponse } from "../../api/utils/generics";
@@ -49,7 +40,7 @@ export default function EditItemCard({
     itemId: number,
     bodyData: ItemPostPutRequest
   ) => {
-    ItemApi.putItem(itemId, bodyData)
+    await ItemApi.putItem(itemId, bodyData)
       .then((data) => {
         if (data.message !== undefined) {
           setItemResponse(data);
@@ -115,7 +106,7 @@ export default function EditItemCard({
               })
             }
           >
-            Edit item
+            Submit
           </Button>
           {isResponseSuccesful === true && (
             <Alert severity="success">Item succesfully updated</Alert>

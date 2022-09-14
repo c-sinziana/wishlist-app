@@ -8,8 +8,13 @@ import {
   GetRequest,
 } from "./utils/generics";
 
-interface GroupUsersPostRequest {
+export interface GroupUsersPostRequest {
   userIds: number[];
+}
+
+export interface GroupPutRequest {
+  name: string;
+  details: string;
 }
 
 export interface GroupPostRequest {
@@ -17,7 +22,7 @@ export interface GroupPostRequest {
   details: string;
 }
 
-interface GroupPutInviteRequest {
+export interface GroupPutInviteRequest {
   status: boolean;
 }
 
@@ -44,7 +49,8 @@ const groupRequest = {
   postWishlist: (url: string, body: Group) =>
     instance.post<GroupPostWishlistRequest>(url, body).then(responseBody),
   get: (url: string) => instance.get<GetRequest>(url).then(responseBody),
-  put: (url: string) => instance.put<PutDeleteRequest>(url).then(responseBody),
+  put: (url: string, body: GroupPutRequest) =>
+    instance.put<GroupPutRequest>(url, body).then(responseBody),
   putInvite: (url: string) =>
     instance.put<GroupPutInviteRequest>(url).then(responseBody),
   delete: (url: string) =>
@@ -62,9 +68,14 @@ export const GroupApi = {
   postGroupWishlist: (id: number, group: Group): Promise<Group> =>
     groupRequest.postWishlist(`/groups/${id}/wishlists`, group),
   getGroups: (): Promise<GroupGetResponse> => groupRequest.get("/groups"),
-  putGroup: (id: number): Promise<PostPutDeleteResponse> =>
-    groupRequest.put(`/groups/${id}`),
-  putGroupInvite: (id: number): Promise<PostPutDeleteResponse> =>
+  putGroup: (
+    id: number,
+    group: GroupPutRequest
+  ): Promise<PostPutDeleteResponse> => groupRequest.put(`/groups/${id}`, group),
+  putGroupInvite: (
+    id: number,
+    bodyData: GroupPutInviteRequest
+  ): Promise<PostPutDeleteResponse> =>
     groupRequest.putInvite(`/groups/${id}/invite`),
   deleteGroup: (id: number): Promise<PostPutDeleteResponse> =>
     groupRequest.delete(`/groups/${id}`),

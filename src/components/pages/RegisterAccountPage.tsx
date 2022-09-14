@@ -1,11 +1,11 @@
 import React from "react";
-import { Title } from "../atoms/Title";
+import { TitleHeading } from "../atoms/TitleHeading";
 import { RegisterTemplate } from "../templates/RegisterTemplate";
 
 export const RegisterAccountPage: React.FC = (): React.ReactElement => {
   return (
     <>
-      <Title title="Create an account here!" />
+      <TitleHeading title="Create an account here!" />
       <RegisterTemplate />
     </>
   );

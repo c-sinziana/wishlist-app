@@ -9,26 +9,23 @@ export const Initializers = {
     model: "",
     link: "",
   },
-  WISHLIST: [
-    {
-      name: "",
-      details: "",
-      id: 0,
-      uid: 0,
-      items: [
-        {
-          id: 0,
-          name: "",
-          details: "",
-          quantity: 0,
-          size: "",
-          maker: "",
-          model: "",
-          link: "",
-        },
-      ],
-    },
-  ],
+  WISHLIST: {
+    id: 0,
+    name: "",
+    details: "",
+    items: [
+      {
+        id: 0,
+        name: "",
+        details: "",
+        quantity: 0,
+        size: "",
+        maker: "",
+        model: "",
+        link: "",
+      },
+    ],
+  },
   MEMBER: {
     status: "",
     user: "",
@@ -41,13 +38,12 @@ export const Initializers = {
     street: "",
     zip: "",
     uid: 0,
-},
+  },
   NOTIFICATION: {
     id: 0,
     category: "",
     details: "",
     isActive: true,
-    uid: 0,
   },
   GROUP: {
     id: 0,

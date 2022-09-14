@@ -11,37 +11,22 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import MoreIcon from "@mui/icons-material/MoreVert";
 
 import { Chat } from "@mui/icons-material";
-import { Router, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import MenuDrawer from "./MenuDrawerTemplate";
 import MenuItems from "./MenuItemsTemplate";
 import SearchBar from "../atoms/Search";
-import { LinkBehavior } from "../atoms/LinkBehavior";
-import { Link } from "react-router-dom";
-import ProfilePage from "../pages/ProfilePage";
-import { profile } from "console";
 
 export default function Navbar() {
   const navigate = useNavigate();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     React.useState<null | HTMLElement>(null);
 
-  const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
-
-  const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    handleMobileMenuClose();
   };
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -99,25 +84,22 @@ export default function Navbar() {
           <SearchBar />
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton size="large" color="inherit">
+            <IconButton
+              size="large"
+              color="inherit"
+              onClick={() => navigate("/my-notifications")}
+            >
               <Badge color="error">
-                <Chat onClick={() => navigate("/my-chat")} />
-              </Badge>
-            </IconButton>
-            <IconButton size="large" color="inherit">
-              <Badge color="error">
-                <NotificationsIcon
-                  onClick={() => navigate("/my-notifications")}
-                />
+                <NotificationsIcon />
               </Badge>
             </IconButton>
             <IconButton
               size="large"
               edge="end"
-              onClick={handleProfileMenuOpen}
+              onClick={() => navigate("/profile")}
               color="inherit"
             >
-              <AccountCircle onClick={() => navigate("/profile")} />
+              <AccountCircle />
             </IconButton>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>

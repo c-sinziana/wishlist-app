@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "@mui/material";
+import { Fab } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 import { GroupApi } from "../../api/GroupApi";
@@ -24,13 +24,13 @@ const DeleteGroupButton = ({ id }: DeleteGroupButtonProp) => {
   };
 
   return (
-    <Button
-      variant="outlined"
-      startIcon={<DeleteIcon />}
+    <Fab
+      size="small"
+      color="primary"
       onClick={async () => await groupDeleteFetcher(id)}
     >
-      Delete
-    </Button>
+      <DeleteIcon />
+    </Fab>
   );
 };
 

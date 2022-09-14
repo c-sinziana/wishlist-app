@@ -1,14 +1,14 @@
 import React from "react";
-import ItemsList from "../organisms/ItemsList";
-import { Title } from "../atoms/Title";
-import AddItemToWishlist from "../organisms/AddItemToWishlist";
-import ModalNewWishlist from "../organisms/ModalNewWishlist";
+
+import ItemsListTemplate from "./ItemsListTemplate";
+import { TitleHeading } from "../atoms/TitleHeading";
+import CreateWishlistModal from "../organisms/CreateWishlistModal";
 
 const WishlistTemplate = () => {
   return (
     <div>
-      <Title title="My Wishlists" />
-      <ModalNewWishlist />
+      <TitleHeading title="My Wishlists" />
+      <CreateWishlistModal />
     </div>
   );
 };
