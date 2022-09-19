@@ -11,7 +11,7 @@ export const LoginPage: React.FC = (): React.ReactElement => {
       <div>
         <span>
           Don't you have an account?
-          <LinkBehavior href="/register">Sign up here</LinkBehavior>
+          <LinkBehavior href="/wishlist-app/register">Sign up here</LinkBehavior>
         </span>
       </div>
     </>
