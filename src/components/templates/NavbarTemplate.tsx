@@ -5,16 +5,11 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Badge from "@mui/material/Badge";
-import Menu from "@mui/material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import MoreIcon from "@mui/icons-material/MoreVert";
-
 import { useNavigate } from "react-router-dom";
 
 import MenuDrawer from "./MenuDrawerTemplate";
-import MenuItemsTemplate from "./MenuItemsTemplate";
-import { MenuItem } from "@mui/material";
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -32,7 +27,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               color="inherit"
-              onClick={() => navigate("/my-notifications")}
+              onClick={() => navigate("/wishlist-app/my-notifications")}
             >
               <Badge color="error">
                 <NotificationsIcon />
@@ -41,7 +36,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               edge="end"
-              onClick={() => navigate("/profile")}
+              onClick={() => navigate("/wishlist-app/profile")}
               color="inherit"
             >
               <AccountCircle />
@@ -51,7 +46,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               color="inherit"
-              onClick={() => navigate("/my-notifications")}
+              onClick={() => navigate("/wishlist-app/my-notifications")}
             >
               <Badge color="error">
                 <NotificationsIcon />
@@ -60,7 +55,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               edge="end"
-              onClick={() => navigate("/profile")}
+              onClick={() => navigate("/wishlist-app/profile")}
               color="inherit"
             >
               <AccountCircle />

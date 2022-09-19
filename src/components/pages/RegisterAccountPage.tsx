@@ -14,7 +14,7 @@ export const RegisterAccountPage: React.FC = (): React.ReactElement => {
       <Fab sx={{ mr: "30rem" }}>
         <ArrowBackRoundedIcon
           fontSize="large"
-          onClick={() => navigate("/login")}
+          onClick={() => navigate("/wishlist-app/login")}
         />
       </Fab>
       <TitleHeading title="Create an account here!" />
