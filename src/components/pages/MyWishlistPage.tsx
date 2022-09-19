@@ -5,32 +5,33 @@ import { WishlistApi, WishlistGetResponse } from "../../api/WishlistApi";
 import WishlistCard from "../organisms/WishlistCard";
 import WishlistTemplate from "../templates/WishlistTemplate";
 import { Grid } from "@mui/material";
+import { Initializers } from "../../constants/Initializers";
 
 const MyWishlistsPage = () => {
   const [shownWishlists, setShownWishlists] = useState<WishlistGetResponse>({
-    wishlists: [],
+    wishlists: [
+      {
+        id: 0,
+        name: "",
+        details: "",
+        items: [
+          {
+            item: Initializers.ITEM,
+          },
+        ],
+      },
+    ],
   });
 
   useEffect(() => {
-    async function WishlistsShow() {
-      await wishlistsFetcher();
-    }
-
-    WishlistsShow();
+    wishlistsFetcher();
   }, []);
 
   const wishlistsFetcher = async () => {
     await WishlistApi.getWishlists()
       .then((data) => {
-        let resultWishlists = [];
-
-        let resultsCounter = data.wishlists.length;
-        for (let index = 0; index < resultsCounter; ++index) {
-          resultWishlists.push(data.wishlists[index]);
-        }
-
         setShownWishlists({
-          wishlists: resultWishlists,
+          wishlists: data.wishlists,
         });
       })
       .catch((err) => {
@@ -42,8 +43,9 @@ const MyWishlistsPage = () => {
     <Container>
       <WishlistTemplate />
       <Grid>
-        {shownWishlists.wishlists.map((wishlist) => (
+        {shownWishlists.wishlists.map((wishlist, index) => (
           <WishlistCard
+            key={index}
             wishlist={{
               id: wishlist.id,
               name: wishlist.name,

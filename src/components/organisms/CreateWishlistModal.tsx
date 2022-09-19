@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Alert, Box, Button, Modal, TextField } from "@mui/material";
 
 import { WishlistApi, WishlistPostPutRequest } from "../../api/WishlistApi";
 import ItemsListModal from "./ItemsListModal";
+import { Configs } from "../../constants/Configs";
 
 function CreateWishlistModal() {
   const [open, setOpen] = React.useState(false);
@@ -17,12 +18,21 @@ function CreateWishlistModal() {
   const [details, setDetails] = useState<string>("");
   const [itemIds, setItemIds] = useState<number[]>([]);
 
-  const [isResponseSuccesful, setIsResponseSuccessful] =
-    useState<boolean>(false);
+  const [isResponseSuccesful, setIsResponseSuccessful] = useState<
+    boolean | undefined
+  >();
+
+  useEffect(() => {
+    if (isResponseSuccesful === true) {
+      const timer: NodeJS.Timeout = setTimeout(() => {
+        handleClose();
+        location.reload();
+      }, Configs.ALERT_TIMEOUT);
+      return () => clearTimeout(timer);
+    }
+  }, [isResponseSuccesful]);
 
   const createWishlistFetcher = async (bodyData: WishlistPostPutRequest) => {
-    console.log("Body data is: ", JSON.stringify(bodyData));
-
     await WishlistApi.postWishlist(bodyData)
       .then((data) => {
         if (data !== undefined) {
@@ -39,8 +49,6 @@ function CreateWishlistModal() {
 
   const handleAddToWishlist = (clickedItemId: number) => {
     setItemIds([...itemIds, clickedItemId]);
-    console.log("Clicked item is:", clickedItemId);
-    console.log("Clicked item are:", JSON.stringify(itemIds));
   };
 
   return (
@@ -56,14 +64,18 @@ function CreateWishlistModal() {
             value={details}
             onChange={(e) => setDetails(e.target.value)}
           />
-          <ItemsListModal handleAddToWishlist={handleAddToWishlist} />
-          {isResponseSuccesful === true && (
-            <Alert severity="success">Item succesfully added</Alert>
-          )}
+          <ItemsListModal
+            isAddItem={true}
+            isEditItem={false}
+            isItemFromWishlist={false}
+            isDeleteItemFromWishlist={false}
+            handleAddToWishlist={handleAddToWishlist}
+            handleDeleteWishlistItem={() => console.log("Unused")}
+          />
           <Button onClick={handleClose}>Close</Button>
           <Button
-            onClick={async () => {
-              await createWishlistFetcher({
+            onClick={() => {
+              createWishlistFetcher({
                 wishlist: { name, details },
                 itemIds,
               });

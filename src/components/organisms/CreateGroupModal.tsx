@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import { Alert, Box, Button, Modal, TextField } from "@mui/material";
-import { ItemPostPutRequest, ItemApi } from "../../api/ItemApi";
-import { Group, Item } from "../../api/utils/entities";
-import { GroupApi, GroupPostRequest } from "../../api/GroupApi";
+import {
+  GroupApi,
+  GroupPostPutRequest,
+  GroupPostResponse,
+} from "../../api/GroupApi";
 import UsersListModal from "./UsersListModal";
+import { Configs } from "../../constants/Configs";
 
 function CreateGroupModal() {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
   const handleOpen = () => {
     setOpen(true);
   };
@@ -14,23 +17,41 @@ function CreateGroupModal() {
     setOpen(false);
   };
 
-  const [group, setGroup] = useState<GroupPostRequest>({
+  const [group, setGroup] = useState<GroupPostResponse>({
+    id: 0,
     name: "",
     details: "",
   });
 
-  const [name, setName] = useState<string>("");
-  const [details, setDetails] = useState<string>("");
-  const [userIds, setUserIds] = useState<number[]>([]);
+  const [shownName, setShownName] = useState<string>("");
+  const [shownDetails, setShownDetails] = useState<string>("");
+  const [usersIds, setUsersIds] = useState<number[]>([]);
 
-  const [isResponseSuccesful, setIsResponseSuccessful] =
-    useState<boolean>(false);
+  const [isResponseSuccesful, setIsResponseSuccessful] = useState<
+    boolean | undefined
+  >();
+  const [isAddUserResponseSuccesful, setIsAddUserResponseSuccessful] = useState<
+    boolean | undefined
+  >();
 
-  const createGroupFetcher = async (bodyData: GroupPostRequest) => {
-    GroupApi.postGroup(bodyData)
+  let myGroupId: number = 0;
+
+  useEffect(() => {
+    if (isResponseSuccesful === true && isAddUserResponseSuccesful === true) {
+      const timer: NodeJS.Timeout = setTimeout(() => {
+        handleClose();
+        location.reload();
+      }, Configs.ALERT_TIMEOUT);
+      return () => clearTimeout(timer);
+    }
+  }, [isResponseSuccesful, isAddUserResponseSuccesful]);
+
+  const createGroupFetcher = async (bodyData: GroupPostPutRequest) => {
+    await GroupApi.postGroup(bodyData)
       .then((data) => {
         if (data !== undefined) {
-          setGroup(data);
+          setGroup({ id: data.id, name: data.name, details: data.details });
+          myGroupId = data.id;
           setIsResponseSuccessful(true);
         } else {
           setIsResponseSuccessful(false);
@@ -42,9 +63,23 @@ function CreateGroupModal() {
       });
   };
 
-  
+  const addGroupUserFetcher = async (id: number, userIdentifiers: number[]) => {
+    await GroupApi.postGroupUser(id, { userIds: userIdentifiers })
+      .then((data) => {
+        if (data.message !== undefined) {
+          setIsAddUserResponseSuccessful(true);
+        } else {
+          setIsAddUserResponseSuccessful(false);
+        }
+      })
+      .catch((err) => {
+        setIsAddUserResponseSuccessful(false);
+        console.log(err);
+      });
+  };
+
   const handleAddToGroup = (clickedUserId: number) => {
-    setUserIds([...userIds, clickedUserId]);
+    setUsersIds([...usersIds, clickedUserId]);
   };
 
   return (
@@ -54,20 +89,24 @@ function CreateGroupModal() {
         <Box sx={{ ...style, width: 200 }}>
           <h2>Create new group:</h2>
           Name:
-          <TextField value={name} onChange={(e) => setName(e.target.value)} />
+          <TextField
+            value={shownName}
+            onChange={(e) => setShownName(e.target.value)}
+          />
           Details:
           <TextField
-            value={details}
-            onChange={(e) => setDetails(e.target.value)}
+            value={shownDetails}
+            onChange={(e) => setShownDetails(e.target.value)}
           />
-          <UsersListModal  handleAddToGroup={handleAddToGroup}/>
+          <UsersListModal handleAddToGroup={handleAddToGroup} />
           <Button onClick={handleClose}>Close</Button>
           <Button
             onClick={async () => {
               await createGroupFetcher({
-                name,
-                details,
+                name: shownName,
+                details: shownDetails,
               });
+              await addGroupUserFetcher(myGroupId, usersIds);
             }}
           >
             Save Group

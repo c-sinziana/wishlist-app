@@ -8,7 +8,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import { GroupApi, GroupPutRequest } from "../../api/GroupApi";
+import { GroupApi, GroupPostPutRequest } from "../../api/GroupApi";
 import { Group } from "../../api/utils/entities";
 import { PostPutDeleteResponse } from "../../api/utils/generics";
 
@@ -17,7 +17,7 @@ export default function EditGroupCard({ id, name, details }: Group) {
 
   const toggleIsEditing = () => setIsEditing(!isEditing);
 
-  const [itemResponse, setItemResponse] = useState<PostPutDeleteResponse>({
+  const [groupResponse, setGroupResponse] = useState<PostPutDeleteResponse>({
     message: "",
   });
 
@@ -27,10 +27,7 @@ export default function EditGroupCard({ id, name, details }: Group) {
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
 
-  const updateGroupFetcher = async (id: number, bodyData: GroupPutRequest) => {
-    console.log("Name is: ", bodyData.name);
-    console.log("Details are: ", bodyData.details);
-
+  const updateGroupFetcher = async (id: number, bodyData: GroupPostPutRequest) => {
     await GroupApi.putGroup(id, bodyData)
       .then((data) => {
         if (data.message !== undefined) {

@@ -1,24 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
+  Box,
   Button,
   Card,
   CardContent,
   Container,
+  Modal,
   TextField,
 } from "@mui/material";
 
 import { MeApi, MePutRequest, MePutResponse } from "../../api/MeApi";
 import { Initializers } from "../../constants/Initializers";
+import { trimUpdateDate } from "../../utils/DateUtils";
+import { Configs } from "../../constants/Configs";
 
-export default function EditProfileCard({
-  name,
-  email,
-  dob,
-  phone,
-  address: { id, country, city, street, zip },
-}: MePutResponse) {
-  const [isEditing, setIsEditing] = useState(false);
+type EditProfileModalProps = {
+  me: MePutResponse;
+  handleCloseModal: (isClosed: boolean) => void;
+};
+
+export default function EditProfileModal({
+  me,
+  handleCloseModal,
+}: EditProfileModalProps) {
+  const [open, setOpen] = React.useState(true);
+  const handleClose = () => {
+    setOpen(false);
+    handleCloseModal(false);
+  };
 
   const [meResponse, setMeResponse] = useState<MePutResponse>({
     name: "",
@@ -29,16 +39,26 @@ export default function EditProfileCard({
     address: Initializers.ADDRESS,
   });
 
-  const [editName, setEditName] = useState<string>(name);
-  const [editPhone, setEditPhone] = useState<string>(phone);
-  const [editDob, setEditDob] = useState<string>(dob);
-  const [editCountry, setEditCountry] = useState<string>(country);
-  const [editCity, setEditCity] = useState<string>(city);
-  const [editStreet, setEditStreet] = useState<string>(street);
-  const [editZip, setEditZip] = useState<string>(zip);
+  const [editName, setEditName] = useState<string>(me.name);
+  const [editPhone, setEditPhone] = useState<string>(me.phone);
+  const [editDob, setEditDob] = useState<string>(me.dob);
+  const [editCountry, setEditCountry] = useState<string>(me.address.country);
+  const [editCity, setEditCity] = useState<string>(me.address.city);
+  const [editStreet, setEditStreet] = useState<string>(me.address.street);
+  const [editZip, setEditZip] = useState<string>(me.address.zip);
 
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    if (isResponseSuccesful === true) {
+      const timer: NodeJS.Timeout = setTimeout(() => {
+        handleClose();
+        location.reload();
+      }, Configs.ALERT_TIMEOUT);
+      return () => clearTimeout(timer);
+    }
+  }, [isResponseSuccesful]);
 
   const updateMeFetcher = async (bodyData: MePutRequest) => {
     await MeApi.putMe(bodyData)
@@ -57,20 +77,20 @@ export default function EditProfileCard({
   };
 
   return (
-    <Container>
-      <Card>
-        <CardContent>
+    <>
+      <Modal hideBackdrop open={open} onClose={handleClose}>
+        <Box sx={{ ...style, width: 200 }}>
           <TextField
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
           />
-          <TextField disabled={true} value={email} />
+          <TextField disabled={true} value={me.email} />
           <TextField
             value={editPhone}
             onChange={(e) => setEditPhone(e.target.value)}
           />
           <TextField
-            value={editDob}
+            value={trimUpdateDate(editDob)}
             onChange={(e) => setEditDob(e.target.value)}
           />
           <TextField
@@ -93,6 +113,7 @@ export default function EditProfileCard({
             value={editZip}
             onChange={(e) => setEditZip(e.target.value)}
           />
+          <Button onClick={handleClose}>Close</Button>
 
           <Button
             onClick={() =>
@@ -101,7 +122,7 @@ export default function EditProfileCard({
                 phone: editPhone,
                 dob: editDob,
                 address: {
-                  id: id,
+                  id: me.address.id,
                   country: editCountry,
                   city: editCity,
                   street: editStreet,
@@ -110,14 +131,28 @@ export default function EditProfileCard({
               })
             }
           >
-            Edit profile
+            Submit
           </Button>
 
           {isResponseSuccesful === true && (
             <Alert severity="success"> Profile succesfully updated</Alert>
           )}
-        </CardContent>
-      </Card>
-    </Container>
+        </Box>
+      </Modal>
+    </>
   );
 }
+
+const style = {
+  position: "absolute" as "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};

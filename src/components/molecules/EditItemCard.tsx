@@ -58,7 +58,7 @@ export default function EditItemCard({
   return (
     <Grid display="flex" flexDirection="column">
       <Card elevation={5}>
-        <Grid xs={12} md={8} lg={15}>
+        <Grid xs={12} md={8} lg={15} item={true}>
           <CardContent key={id}>
             Name:
             <TextField

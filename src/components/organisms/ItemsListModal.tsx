@@ -4,10 +4,22 @@ import ItemsListTemplate from "../templates/ItemsListTemplate";
 import { Item } from "../../api/utils/entities";
 
 type ItemsListModalProps = {
+  isAddItem: boolean;
+  isEditItem: boolean;
+  isItemFromWishlist: boolean;
+  isDeleteItemFromWishlist: boolean;
   handleAddToWishlist: (clickedItemId: number) => void;
+  handleDeleteWishlistItem: (clickedItemId: number) => void;
 };
 
-function ItemsListModal({ handleAddToWishlist }: ItemsListModalProps) {
+function ItemsListModal({
+  isAddItem,
+  isEditItem,
+  isItemFromWishlist,
+  isDeleteItemFromWishlist,
+  handleAddToWishlist,
+  handleDeleteWishlistItem,
+}: ItemsListModalProps) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -15,8 +27,6 @@ function ItemsListModal({ handleAddToWishlist }: ItemsListModalProps) {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const [wishlistItems, setWishlistItems] = useState<Item[]>([]);
 
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
@@ -29,11 +39,14 @@ function ItemsListModal({ handleAddToWishlist }: ItemsListModalProps) {
           <CardHeader action={<Button onClick={handleClose}>Close</Button>} />
           <ItemsListTemplate
             renderedItems={[]}
-            isAddItem={true}
-            handleAddToWishlist={handleAddToWishlist}
-            isEditItem={true}
-            isDeleteItemFromWishlist={false}
+            isAddItem={isAddItem}
+            isEditItem={isEditItem}
+            isDeleteItemFromWishlist={isDeleteItemFromWishlist}
+            isItemFromWishlist={isItemFromWishlist}
             wishlistId={-1}
+            isItemWishlistTemplate={false}
+            handleAddToWishlist={handleAddToWishlist}
+            handleDeleteWishlistItem={handleDeleteWishlistItem}
           />
           {isResponseSuccesful === true && <Alert severity="success"></Alert>}
         </Box>

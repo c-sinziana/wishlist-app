@@ -14,10 +14,13 @@ const MyItemsPage = () => {
         <ItemsListTemplate
           renderedItems={[]}
           isAddItem={false}
-          handleAddToWishlist={() => console.log("Unused")}
           isEditItem={true}
-          isDeleteItemFromWishlist={true}
+          isDeleteItemFromWishlist={false}
+          isItemFromWishlist={false}
+          isItemWishlistTemplate={false}
           wishlistId={-1}
+          handleDeleteWishlistItem={() => console.log("Unused")}
+          handleAddToWishlist={() => console.log("Unused")}
         />
       </Grid>
     </Container>

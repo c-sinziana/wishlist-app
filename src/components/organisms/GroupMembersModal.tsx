@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Alert, Box, Button, CardHeader, Modal } from "@mui/material";
-import ItemsListTemplate from "../templates/ItemsListTemplate";
-import { Item } from "../../api/utils/entities";
+import { Group, User } from "../../api/utils/entities";
+import UserCard from "../molecules/UserCard";
 
-type EditItemsListModalProps = {
-  handleAddToWishlist: (clickedItemId: number) => void;
+type GroupMembersModalProp = {
+  group: Group;
 };
 
-function EditItemsListModal({ handleAddToWishlist }: EditItemsListModalProps) {
+function GroupMembersModal({ group }: GroupMembersModalProp) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => {
     setOpen(true);
@@ -16,25 +16,24 @@ function EditItemsListModal({ handleAddToWishlist }: EditItemsListModalProps) {
     setOpen(false);
   };
 
-  const [wishlistItems, setWishlistItems] = useState<Item[]>([]);
-
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
-
   return (
     <>
-      <Button onClick={handleOpen}>Edit items!</Button>
+      <Button onClick={handleOpen}>See group's members</Button>
       <Modal hideBackdrop open={open} onClose={handleClose}>
         <Box sx={{ ...style, width: "90%", height: "80%", mt: "2rem" }}>
           <CardHeader action={<Button onClick={handleClose}>Close</Button>} />
-          <ItemsListTemplate
-            renderedItems={[]}
-            isAddItem={true}
-            handleAddToWishlist={handleAddToWishlist}
-            isEditItem={true}
-            isDeleteItemFromWishlist={true}
-            wishlistId={-1}
-          />
+          Group members:
+          {group.users.map((shownUser, index) => (
+            <UserCard
+              key={index}
+              user={shownUser}
+              handleAddToGroup={() => console.log("Unused")}
+              isAddUserToGroup={true}
+              isUserFromGroup={true}
+            />
+          ))}
           {isResponseSuccesful === true && <Alert severity="success"></Alert>}
         </Box>
       </Modal>
@@ -58,4 +57,4 @@ const style = {
   pb: 3,
 };
 
-export default EditItemsListModal;
+export default GroupMembersModal;

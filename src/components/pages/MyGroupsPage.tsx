@@ -1,14 +1,15 @@
 import React from "react";
-import GroupsCard from "../organisms/GroupsCard";
+import GroupsList from "../organisms/GroupsList";
 import CreateGroupModal from "../organisms/CreateGroupModal";
 import { TitleHeading } from "../atoms/TitleHeading";
+
 
 const MyGroupsPage = () => {
   return (
     <div>
       <TitleHeading title="My groups" />
       <CreateGroupModal />
-      <GroupsCard />
+      <GroupsList />
     </div>
   );
 };

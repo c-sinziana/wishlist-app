@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Alert, Box, Button, CardHeader, Modal } from "@mui/material";
 import UsersList from "./UsersList";
-import { User } from "../../api/utils/entities";
 
 type UsersListModalProp = {
   handleAddToGroup: (clickedItemId: number) => void;
@@ -16,8 +15,6 @@ function UsersListModal({ handleAddToGroup }: UsersListModalProp) {
     setOpen(false);
   };
 
-  const [groupUsers, setGroupUsers] = useState<User[]>([]);
-
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
 
@@ -27,7 +24,12 @@ function UsersListModal({ handleAddToGroup }: UsersListModalProp) {
       <Modal hideBackdrop open={open} onClose={handleClose}>
         <Box sx={{ ...style, width: "90%", height: "80%", mt: "2rem" }}>
           <CardHeader action={<Button onClick={handleClose}>Close</Button>} />
-          <UsersList />
+          <UsersList
+            renderedUsers={[]}
+            isAddUser={true}
+            isUserFromGroup={true}
+            handleAddToGroup={handleAddToGroup}
+          />
           {isResponseSuccesful === true && <Alert severity="success"></Alert>}
         </Box>
       </Modal>

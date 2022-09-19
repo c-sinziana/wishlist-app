@@ -1,37 +1,37 @@
 import React from "react";
 import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
 import Badge from "@mui/material/Badge";
-import { Chat } from "@mui/icons-material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import IconButton from "@mui/material/IconButton";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
 
 const MenuItemsTemplate = () => {
+  const navigate = useNavigate();
+
   return (
     <>
-      <MenuItem>
-        <IconButton size="large" color="inherit">
-          <Badge color="error">
-            <Chat />
-          </Badge>
-        </IconButton>
-        <p>Messages</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton size="large" color="inherit">
-          <Badge color="error">
+      <MenuItem onClick={() => navigate("/my-notifications")}>
+        <IconButton
+          size="large"
+          color="inherit"
+          onClick={() => navigate("/my-notifications")}
+        >
+          <Badge color="error" onClick={() => navigate("/my-notifications")}>
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p onClick={() => navigate("/my-notifications")}>Notifications</p>
       </MenuItem>
       <MenuItem>
-        <IconButton size="large" color="inherit">
-          <AccountCircle />
+        <IconButton
+          size="large"
+          color="inherit"
+          onClick={() => console.log("/profile")}
+        >
+          <AccountCircle onClick={() => console.log("/profile")} />
         </IconButton>
-        <p> My Profile</p>
+        <p onClick={() => console.log("/profile")}> My Profile </p>
       </MenuItem>
     </>
   );

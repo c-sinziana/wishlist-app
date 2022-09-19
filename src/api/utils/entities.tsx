@@ -29,7 +29,7 @@ export type Wishlist = {
   id: number;
   name: string;
   details: string;
-  items: Item[];
+  items: { item: Item }[];
 };
 
 export type Member = {
@@ -43,6 +43,8 @@ export type Group = {
   id: number;
   name: string;
   details: string;
+  wishlists: Wishlist[];
+  users: User[];
 };
 
 export type MyNotification = {

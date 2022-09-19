@@ -49,5 +49,7 @@ export const Initializers = {
     id: 0,
     name: "",
     details: "",
+    wishlists: [],
+    users: [],
   },
 };

@@ -7,86 +7,96 @@ import ItemCard from "../organisms/ItemCard";
 import { Item } from "../../api/utils/entities";
 
 type ItemsListTemplateProp = {
+  renderedItems: { item: Item }[];
   wishlistId: number;
-  renderedItems: Item[];
   isAddItem: boolean;
-  isItemFromWishlist?: boolean;
-  isDeleteItemFromWishlist?: boolean;
+  isItemFromWishlist: boolean;
+  isDeleteItemFromWishlist: boolean;
   isEditItem: boolean;
-  isFromWishlist?: boolean;
+  isItemWishlistTemplate: boolean;
   handleAddToWishlist: (clickedItemId: number) => void;
+  handleDeleteWishlistItem: (clickedItemId: number) => void;
 };
 
 export default function ItemsListTemplate({
+  renderedItems,
   wishlistId,
   isAddItem,
-  renderedItems,
   isEditItem,
-  isFromWishlist,
-  handleAddToWishlist,
   isItemFromWishlist,
+  isDeleteItemFromWishlist,
+  isItemWishlistTemplate,
+  handleAddToWishlist,
+  handleDeleteWishlistItem,
 }: ItemsListTemplateProp) {
   const [shownItems, setShownItems] = useState<ItemPostGetResponse>({
     items: [],
   });
+  const [shownItemIds, setShownItemIds] = useState<number[]>([]);
 
   useEffect(() => {
-    async function itemFunction() {
-      await itemFetcher();
-    }
-
-    if (shownItems.items.length === 0) {
-      itemFunction();
+    if (renderedItems.length === 0) {
+      itemFetcher();
     }
   }, []);
 
   const itemFetcher = async () => {
-    if (renderedItems.length === 0 && isFromWishlist === undefined) {
-      await ItemApi.getItems()
-        .then((data) => {
-          let resultItems = [];
-
-          let resultsCounter = data.items.length;
-          for (let index = 0; index < resultsCounter; ++index) {
-            resultItems.push(data.items[index]);
-          }
-
-          setShownItems({
-            items: resultItems,
-          });
-        })
-        .catch((err) => {
-          console.log(err);
+    await ItemApi.getItems()
+      .then((data) => {
+        setShownItems({
+          items: data.items,
         });
-    } else {
-      setShownItems({ items: renderedItems });
-    }
+
+        let dataItemIds = [];
+        let dataItemsLength = data.items.length;
+        for (let index = 0; index < dataItemsLength; ++index) {
+          dataItemIds.push(data.items[index].id);
+        }
+
+        setShownItemIds(dataItemIds);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <Container>
       <Grid container spacing={3}>
-        {shownItems.items.map((shownItem) => (
-          <ItemCard
-            key={shownItem.id}
-            item={{
-              id: shownItem.id,
-              name: shownItem.name,
-              details: shownItem.details,
-              quantity: shownItem.quantity,
-              size: shownItem.size,
-              maker: shownItem.maker,
-              model: shownItem.model,
-              link: shownItem.link,
-            }}
-            isAddItemToWishlist={isAddItem}
-            isEditItemInWishlist={isEditItem}
-            handleAddToWishlist={handleAddToWishlist}
-            wishlistId={wishlistId}
-            isItemFromWishlist={isItemFromWishlist}
-            isDeleteItemFromWishlist={true}
-          />
-        ))}
+        {isItemWishlistTemplate === false && (
+          <>
+            {shownItems.items.map((shownItem: Item, index: number) => (
+              <ItemCard
+                key={index}
+                item={shownItem}
+                isAddItemToWishlist={isAddItem}
+                isEditItemInWishlist={isEditItem}
+                wishlistId={wishlistId}
+                isItemFromWishlist={isItemFromWishlist}
+                isDeleteItemFromWishlist={isDeleteItemFromWishlist}
+                handleAddToWishlist={handleAddToWishlist}
+                handleDeleteWishlistItem={handleDeleteWishlistItem}
+              />
+            ))}
+          </>
+        )}
+        {isItemWishlistTemplate === true && (
+          <>
+            {renderedItems.map((shownItem: { item: Item }, index: number) => (
+              <ItemCard
+                key={index}
+                item={shownItem.item}
+                isAddItemToWishlist={isAddItem}
+                isEditItemInWishlist={isEditItem}
+                wishlistId={wishlistId}
+                isItemFromWishlist={isItemFromWishlist}
+                isDeleteItemFromWishlist={isDeleteItemFromWishlist}
+                handleAddToWishlist={handleAddToWishlist}
+                handleDeleteWishlistItem={handleDeleteWishlistItem}
+              />
+            ))}
+          </>
+        )}
       </Grid>
     </Container>
   );

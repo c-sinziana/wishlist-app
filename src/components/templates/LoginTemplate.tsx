@@ -3,10 +3,8 @@ import { useForm, Controller } from "react-hook-form";
 import { Alert, Button, TextField } from "@mui/material";
 import { ErrorMessages } from "../../constants/ErrorMessages";
 import { Validators } from "../../constants/Validators";
-import { NavigationButton } from "../atoms/NavigationButton";
-import { UserContext } from "../../hooks/context/context";
 import { LoginApi } from "../../api/LoginApi";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 type FormInput = {
@@ -28,25 +26,18 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
     email: "",
     password: "",
   });
-  const [isResponseSuccesful, setIsResponseSuccessful] =
-    React.useState<boolean>();
+  const [isResponseSuccesful, setIsResponseSuccessful] = React.useState<
+    boolean | undefined
+  >();
 
   React.useEffect(() => {
-    async function loginFunction() {
-      await loginFetcher(loginResponseData);
-    }
-
     if (isSubmitSuccessful == true) {
-      loginFunction();
-      //let tokenValue = localStorage.getItem("token");
-      let tokenLogin: string | undefined = Cookies.get("token");
-      console.log("The token is", tokenLogin);
+      loginFetcher(loginResponseData);
+      reset({
+        email: "",
+        password: "",
+      });
     }
-
-    reset({
-      email: "",
-      password: "",
-    });
   }, [isSubmitSuccessful]);
 
   const onSubmit = async (data: FormInput) => {
@@ -58,8 +49,8 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
       .then((data) => {
         if (data.token !== undefined && data.errors === undefined) {
           setIsResponseSuccessful(true);
-          //localStorage.setItem("token", JSON.stringify(data.token));
           Cookies.set("token", data.token, { expires: 0.5 });
+          window.location.pathname = "/my-wishlists";
         } else {
           setIsResponseSuccessful(false);
         }
@@ -133,10 +124,14 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
 
         <Button type="submit">Login</Button>
       </form>
+
       {isResponseSuccesful === false && (
         <Alert severity="error">
           There was a problem when trying to sign in!
         </Alert>
+      )}
+      {isResponseSuccesful === true && (
+        <Alert severity="success">Successfully logged in!</Alert>
       )}
     </>
   );

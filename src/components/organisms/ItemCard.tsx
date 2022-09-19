@@ -3,32 +3,34 @@ import Card from "@mui/material/Card";
 import EditIcon from "@mui/icons-material/Edit";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import { Fab, Grid, Typography } from "@mui/material";
+import { Button, Fab, Grid, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { Item } from "../../api/utils/entities";
 import DeleteItemButton from "../molecules/DeleteItemButton";
 import EditItemCard from "../molecules/EditItemCard";
-import PurchaseItemButton from "../molecules/PurchaseItemButton";
 
 type ItemCardProps = {
   wishlistId: number;
   item: Item;
   isAddItemToWishlist: boolean;
   isEditItemInWishlist: boolean;
-  isDeleteItemFromWishlist?: boolean;
-  isItemFromWishlist?: boolean;
+  isDeleteItemFromWishlist: boolean;
+  isItemFromWishlist: boolean;
   handleAddToWishlist: (clickedItemId: number) => void;
+  handleDeleteWishlistItem: (clickedItemId: number) => void;
 };
 
 export default function ItemCard({
-  wishlistId,
   item,
+  wishlistId,
   isAddItemToWishlist,
   isEditItemInWishlist,
   isDeleteItemFromWishlist,
   isItemFromWishlist,
   handleAddToWishlist,
+  handleDeleteWishlistItem,
 }: ItemCardProps) {
   const [isEditing, setIsEditing] = useState(false);
 
@@ -36,16 +38,19 @@ export default function ItemCard({
 
   if (isEditing) {
     return (
-      <EditItemCard
-        id={item.id}
-        name={item.name}
-        details={item.details}
-        quantity={item.quantity}
-        size={item.size}
-        maker={item.maker}
-        model={item.model}
-        link={item.link}
-      />
+      <>
+        <Button onClick={() => toggleIsEditing()}>Cancel</Button>
+        <EditItemCard
+          id={item.id}
+          name={item.name}
+          details={item.details}
+          quantity={item.quantity}
+          size={item.size}
+          maker={item.maker}
+          model={item.model}
+          link={item.link}
+        />
+      </>
     );
   }
 
@@ -55,11 +60,10 @@ export default function ItemCard({
         <CardHeader
           action={
             <>
-              <DeleteItemButton
-                id={item.id}
-                isDeleteItemFromWishlist={isDeleteItemFromWishlist}
-              />
-              <PurchaseItemButton id={wishlistId} itemId={item.id} isItemFromWishlist={isItemFromWishlist} />
+              {isItemFromWishlist === false &&
+                isAddItemToWishlist === false && (
+                  <DeleteItemButton itemId={wishlistId} />
+                )}
             </>
           }
           title={item.name}
@@ -97,6 +101,16 @@ export default function ItemCard({
               sx={{ ml: "1rem" }}
             >
               <AddIcon />
+            </Fab>
+          )}
+          {isDeleteItemFromWishlist && (
+            <Fab
+              size="small"
+              color="secondary"
+              onClick={() => handleDeleteWishlistItem(item.id)}
+              sx={{ ml: "2rem" }}
+            >
+              <DeleteIcon />
             </Fab>
           )}
         </CardContent>

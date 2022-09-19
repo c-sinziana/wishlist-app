@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import MenuIcon from "@mui/icons-material/Menu";
 import Box from "@mui/material/Box";
@@ -7,15 +7,12 @@ import { Button, Divider, Drawer } from "@mui/material";
 import Paper from "@mui/material/Paper";
 import MenuList from "@mui/material/MenuList";
 import ListItemText from "@mui/material/ListItemText";
-
-import { useState } from "react";
-import { NavigationButton } from "../atoms/NavigationButton";
 import Cookies from "js-cookie";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
+import { NavigationButton } from "../atoms/NavigationButton";
 
 const MenuDrawerTemplate = () => {
-  const navigate = useNavigate();
-
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (
@@ -69,8 +66,7 @@ const MenuDrawerTemplate = () => {
                   type="submit"
                   onClick={() => {
                     Cookies.remove("token");
-                    navigate("login");
-                    window.location.reload();
+                    window.location.pathname = "/";
                   }}
                 >
                   Sign out

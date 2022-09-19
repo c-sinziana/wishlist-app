@@ -1,9 +1,11 @@
 import { Card, Container, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { GroupApi, GroupGetResponse } from "../../api/GroupApi";
+import { Group, Member, Wishlist } from "../../api/utils/entities";
+
 import GroupCard from "./GroupCard";
 
-const GroupsCard = () => {
+const GroupsList = () => {
   const [shownGroups, setShownGroups] = useState<GroupGetResponse>({
     groups: [
       {
@@ -11,30 +13,21 @@ const GroupsCard = () => {
         name: "",
         createdAt: "",
         details: "",
+        wishlists: [],
+        users: [],
       },
     ],
   });
 
   useEffect(() => {
-    async function GroupsShow() {
-      await groupFetcher();
-    }
-
-    GroupsShow();
+    groupFetcher();
   }, []);
 
   const groupFetcher = async () => {
     await GroupApi.getGroups()
       .then((data) => {
-        let resultGroups = [];
-
-        let resultsCounter = data.groups.length;
-        for (let index = 0; index < resultsCounter; ++index) {
-          resultGroups.push(data.groups[index]);
-        }
-
         setShownGroups({
-          groups: resultGroups,
+          groups: data.groups,
         });
       })
       .catch((err) => {
@@ -44,11 +37,21 @@ const GroupsCard = () => {
 
   return (
     <Container>
-      {shownGroups.groups.map((group) => (
-        <GroupCard id={group.id} name={group.name} details={group.details} />
+      {shownGroups.groups.map((group, index) => (
+        <GroupCard
+          key={index}
+          group={{
+            id: group.id,
+            name: group.name,
+            details: group.details,
+            wishlists: group.wishlists,
+            users: group.users,
+          }}
+          wishlist={group.wishlists[index]}
+        />
       ))}
     </Container>
   );
 };
 
-export default GroupsCard;
+export default GroupsList;

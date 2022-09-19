@@ -6,20 +6,29 @@ import { LoginPage } from "../components/pages/LoginPage";
 import { RegisterAccountPage } from "../components/pages/RegisterAccountPage";
 import ProfilePage from "../components/pages/ProfilePage";
 import MyGroupsPage from "../components/pages/MyGroupsPage";
-import WishlistTemplate from "../components/templates/WishlistTemplate";
 import MyWishlistPage from "../components/pages/MyWishlistPage";
 import NotificationsPage from "../components/pages/NotificationsPage";
 import MyItemsPage from "../components/pages/MyItemsPage";
-import UsersPage from "../components/pages/UsersPage";
 
 type RestrictedRouteProps = {
   MyComponent: React.FC;
 };
 
+const AnonymousUserRoute: React.FC<RestrictedRouteProps> = ({
+  MyComponent,
+}: RestrictedRouteProps) => {
+  const loginToken = Cookies.get("token");
+
+  return loginToken === undefined ? (
+    <MyComponent />
+  ) : (
+    <Navigate to="/my-wishlists" />
+  );
+};
+
 const RestrictedRoute: React.FC<RestrictedRouteProps> = ({
   MyComponent,
 }: RestrictedRouteProps) => {
-  //const loginToken = localStorage.getItem("token");
   const loginToken = Cookies.get("token");
 
   return loginToken !== undefined ? <MyComponent /> : <Navigate to="/" />;
@@ -28,13 +37,15 @@ const RestrictedRoute: React.FC<RestrictedRouteProps> = ({
 export const WishlistRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<LoginPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterAccountPage />} />
       <Route
-        path="/home"
-        element={<RestrictedRoute MyComponent={WishlistTemplate} />}
+        path="/login"
+        element={<AnonymousUserRoute MyComponent={LoginPage} />}
       />
+      <Route
+        path="/register"
+        element={<AnonymousUserRoute MyComponent={RegisterAccountPage} />}
+      />
+      <Route path="/" element={<AnonymousUserRoute MyComponent={LoginPage} />} />
       <Route
         path="/profile"
         element={<RestrictedRoute MyComponent={ProfilePage} />}
@@ -54,10 +65,6 @@ export const WishlistRouter = () => {
       <Route
         path="/my-notifications"
         element={<RestrictedRoute MyComponent={NotificationsPage} />}
-      />
-      <Route
-        path="/all-users"
-        element={<RestrictedRoute MyComponent={UsersPage} />}
       />
     </Routes>
   );

@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardContent from "@mui/material/CardContent";
-import { Button, Grid, Typography } from "@mui/material";
-
+import { Button, Fab, Grid, Typography } from "@mui/material";
 import { Wishlist } from "../../api/utils/entities";
 import { WishlistApi, WishlistGetResponse } from "../../api/WishlistApi";
 import DeleteWishlistButton from "../molecules/DeleteWishlistButton";
 import ItemsListTemplate from "../templates/ItemsListTemplate";
 import EditWishlistCard from "../molecules/EditWishlistCard";
+import { Initializers } from "../../constants/Initializers";
 
 type WishlistCardProps = {
   wishlist: Wishlist;
@@ -24,19 +24,28 @@ export default function WishlistCard({
   const [isResponseSuccesful, setIsResponseSuccessful] =
     useState<boolean>(false);
   const [wishlistsResponse, setWishlistsResponse] =
-    useState<WishlistGetResponse>({ wishlists: [] });
-  const [wishlistItems, setWishlistItems] = useState<number[]>([]);
+    useState<WishlistGetResponse>({
+      wishlists: [
+        {
+          id: 0,
+          name: "",
+          details: "",
+          items: [
+            {
+              item: Initializers.ITEM,
+            },
+          ],
+        },
+      ],
+    });
+  const [wishlistItemsIds, setWishlistItemsIds] = useState<number[]>([]);
   const [isEditing, setIsEditing] = useState(false);
 
   const toggleIsEditing = () => setIsEditing((b) => !b);
 
   useEffect(() => {
-    async function wishlistFunction() {
-      await wishlistGetFetcher();
-    }
-
-    if (wishlistsResponse.wishlists.length === 0) {
-      wishlistFunction();
+    if (wishlistsResponse.wishlists.length <= 0) {
+      wishlistGetFetcher();
     }
   }, []);
 
@@ -45,10 +54,11 @@ export default function WishlistCard({
       .then((responseBody) => {
         setWishlistsResponse({ wishlists: responseBody.wishlists });
 
-        setWishlistItems(
-          getWishlistItems(wishlistsResponse.wishlists[wishlist.id])
+        let wishlistItemIdsArray: number[] = getWishlistItemsIds(
+          wishlistsResponse.wishlists[wishlist.id]
         );
 
+        setWishlistItemsIds(wishlistItemIdsArray);
         setIsResponseSuccessful(true);
       })
       .catch((err) => {
@@ -56,11 +66,11 @@ export default function WishlistCard({
       });
   };
 
-  const getWishlistItems = (wishlist: Wishlist): number[] => {
+  const getWishlistItemsIds = (wishlist: Wishlist): number[] => {
     let itemIdsArray: number[] = [];
 
     for (let itemIndex = 0; itemIndex < itemIdsArray.length; ++itemIndex) {
-      itemIdsArray.push(wishlist.items[itemIndex].id);
+      itemIdsArray.push(wishlist.items[itemIndex].item.id);
     }
 
     return itemIdsArray;
@@ -68,15 +78,18 @@ export default function WishlistCard({
 
   if (isEditing) {
     return (
-      <EditWishlistCard
-        id={wishlist.id}
-        handleAddToWishlist={handleAddToWishlist}
-        handleDeleteWishlistItem={handleDeleteWishlistItem}
-        updatedWishlist={{
-          wishlist: { name: wishlist.name, details: wishlist.details },
-          itemIds: wishlistItems,
-        }}
-      />
+      <>
+        <Button onClick={() => toggleIsEditing()}>Cancel</Button>
+        <EditWishlistCard
+          id={wishlist.id}
+          handleAddToWishlist={handleAddToWishlist}
+          handleDeleteWishlistItem={handleDeleteWishlistItem}
+          updatedWishlist={{
+            wishlist: { name: wishlist.name, details: wishlist.details },
+            itemIds: wishlistItemsIds,
+          }}
+        />
+      </>
     );
   }
 
@@ -92,16 +105,19 @@ export default function WishlistCard({
           Details: <Typography> {wishlist.details}</Typography>
           <ItemsListTemplate
             renderedItems={wishlist.items}
-            handleAddToWishlist={() => console.log("Unused")}
             isAddItem={false}
             isEditItem={false}
-            isDeleteItemFromWishlist={false}
+            isDeleteItemFromWishlist={true}
             wishlistId={wishlist.id}
-            isFromWishlist={true}
             isItemFromWishlist={true}
+            isItemWishlistTemplate={true}
+            handleAddToWishlist={() => console.log("Unused")}
+            handleDeleteWishlistItem={handleDeleteWishlistItem}
           />
         </CardContent>
       </Card>
     </Grid>
   );
 }
+
+

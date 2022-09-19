@@ -13,25 +13,14 @@ const NotificationsList = () => {
     });
 
   useEffect(() => {
-    async function getMyNotifications() {
-      await notificationsFetcher();
-    }
-
-    getMyNotifications();
+    notificationsFetcher();
   }, []);
 
   const notificationsFetcher = async () => {
     await MeApi.getMeNotifications()
       .then((data) => {
-        let receivedNotifications = [];
-
-        let notificationsCounter = data.notifications.length;
-        for (let index = 0; index < notificationsCounter; ++index) {
-          receivedNotifications.push(data.notifications[index]);
-        }
-
         setShownNotifications({
-          notifications: receivedNotifications,
+          notifications: data.notifications,
         });
       })
       .catch((err) => {
@@ -41,9 +30,9 @@ const NotificationsList = () => {
 
   return (
     <Container>
-      {shownNotifications.notifications.map((notification) => (
+      {shownNotifications.notifications.map((notification, index) => (
         <NotificationsCard
-          id={notification.id}
+          id={index}
           category={notification.category}
           details={notification.details}
         />

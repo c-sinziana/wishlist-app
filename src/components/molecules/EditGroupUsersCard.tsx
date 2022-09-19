@@ -1,6 +1,4 @@
-export {};
-
-/*import React, { useState } from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { Alert, Button, Container, TextField } from "@mui/material";
@@ -8,12 +6,16 @@ import { Alert, Button, Container, TextField } from "@mui/material";
 import { GroupApi, GroupUsersPostRequest } from "../../api/GroupApi";
 import { PostPutDeleteResponse } from "../../api/utils/generics";
 
-export default function EditGroupUsersCard({
-  userIds: [],
-}: GroupUsersPostRequest) {
-  const [isEditing, setIsEditing] = useState(false);
+type EditGroupUsersCardProp = {
+  id: number;
+  userIds: number[];
+};
 
- 
+export default function EditGroupUsersCard({
+  id,
+  userIds,
+}: EditGroupUsersCardProp) {
+  const [isEditing, setIsEditing] = useState(false);
 
   const toggleIsEditing = () => setIsEditing(!isEditing);
 
@@ -47,11 +49,13 @@ export default function EditGroupUsersCard({
     <Container>
       <Card>
         <CardContent>
-          <Button onClick={async () => {
-              await updateGroupUsersFetcher(id{
-             userIds
+          <Button
+            onClick={() => {
+              updateGroupUsersFetcher(id, {
+                userIds: [],
               });
-            }}/>
+            }}
+          ></Button>
           {isResponseSuccesful === true && (
             <Alert severity="success"> Group succesfully updated</Alert>
           )}
@@ -59,4 +63,4 @@ export default function EditGroupUsersCard({
       </Card>
     </Container>
   );
-}*/
+}

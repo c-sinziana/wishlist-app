@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 import { instance } from "./utils/instance";
-import { Group, Member, User, Wishlist } from "./utils/entities";
+import { Group, Item, Member, User, Wishlist } from "./utils/entities";
 import {
   PutDeleteRequest,
   PostPutDeleteResponse,
@@ -12,12 +12,7 @@ export interface GroupUsersPostRequest {
   userIds: number[];
 }
 
-export interface GroupPutRequest {
-  name: string;
-  details: string;
-}
-
-export interface GroupPostRequest {
+export interface GroupPostPutRequest {
   name: string;
   details: string;
 }
@@ -26,8 +21,14 @@ export interface GroupPutInviteRequest {
   status: boolean;
 }
 
-interface GroupPostWishlistRequest {
-  wishlistIds: number[];
+export interface GroupPostWishlistRequest {
+  wishlistIds: number;
+}
+
+export interface GroupPostResponse {
+  id: number;
+  name: string;
+  details: string;
 }
 
 export interface GroupGetResponse {
@@ -36,21 +37,46 @@ export interface GroupGetResponse {
     createdAt: string;
     name: string;
     details: string;
+    wishlists: Wishlist[];
+    users: User[];
   }[];
+}
+
+export interface GroupsGetSharedResponse {
+  groups: [
+    {
+      name: string;
+      details: string;
+      id: number;
+      uid: number;
+      wishlists: [
+        {
+          name: string;
+          details: string;
+          id: number;
+          uid: number;
+          items: Item[];
+          members: Member[];
+        }
+      ];
+    }
+  ];
 }
 
 const responseBody = (response: AxiosResponse) => response.data;
 
 const groupRequest = {
-  post: (url: string, body: GroupPostRequest) =>
-    instance.post<GroupPostRequest>(url, body).then(responseBody),
+  post: (url: string, body: GroupPostPutRequest) =>
+    instance.post<GroupPostPutRequest>(url, body).then(responseBody),
   postUser: (url: string, body: GroupUsersPostRequest) =>
     instance.post<GroupUsersPostRequest>(url, body).then(responseBody),
-  postWishlist: (url: string, body: Group) =>
+  postWishlist: (url: string, body: number[]) =>
     instance.post<GroupPostWishlistRequest>(url, body).then(responseBody),
   get: (url: string) => instance.get<GetRequest>(url).then(responseBody),
-  put: (url: string, body: GroupPutRequest) =>
-    instance.put<GroupPutRequest>(url, body).then(responseBody),
+  getSharedGroups: (url: string) =>
+    instance.get<GetRequest>(url).then(responseBody),
+  put: (url: string, body: GroupPostPutRequest) =>
+    instance.put<GroupPostPutRequest>(url, body).then(responseBody),
   putInvite: (url: string) =>
     instance.put<GroupPutInviteRequest>(url).then(responseBody),
   delete: (url: string) =>
@@ -58,19 +84,21 @@ const groupRequest = {
 };
 
 export const GroupApi = {
-  postGroup: (group: GroupPostRequest): Promise<GroupPostRequest> =>
+  postGroup: (group: GroupPostPutRequest): Promise<GroupPostResponse> =>
     groupRequest.post("/groups", group),
   postGroupUser: (
     id: number,
-    group: GroupUsersPostRequest
+    groupUsers: GroupUsersPostRequest
   ): Promise<PostPutDeleteResponse> =>
-    groupRequest.postUser(`/groups/${id}/users`, group),
-  postGroupWishlist: (id: number, group: Group): Promise<Group> =>
-    groupRequest.postWishlist(`/groups/${id}/wishlists`, group),
+    groupRequest.postUser(`/groups/${id}/users`, groupUsers),
+  postGroupWishlist: (id: number, wishlistIds: number[]): Promise<Group> =>
+    groupRequest.postWishlist(`/groups/${id}/wishlists`, wishlistIds),
   getGroups: (): Promise<GroupGetResponse> => groupRequest.get("/groups"),
+  getSharedGroups: (): Promise<GroupsGetSharedResponse> =>
+    groupRequest.get("/groups/shared"),
   putGroup: (
     id: number,
-    group: GroupPutRequest
+    group: GroupPostPutRequest
   ): Promise<PostPutDeleteResponse> => groupRequest.put(`/groups/${id}`, group),
   putGroupInvite: (
     id: number,

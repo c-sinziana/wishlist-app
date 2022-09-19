@@ -5,13 +5,11 @@ import { Alert, Button, Grid, TextField } from "@mui/material";
 
 import { WishlistApi, WishlistPostPutRequest } from "../../api/WishlistApi";
 
-import EditItemsListModal from "../organisms/EditItemsListModal";
-
 type EditWishlistCardProps = {
   id: number;
   updatedWishlist: WishlistPostPutRequest;
   handleAddToWishlist: (clickedItemId: number) => void;
-  handleDeleteWishlistItem?: (clickedItemId: number) => void;
+  handleDeleteWishlistItem: (clickedItemId: number) => void;
 };
 
 export default function EditWishlistCard({
@@ -58,7 +56,7 @@ export default function EditWishlistCard({
   return (
     <Grid display="flex" flexDirection="column">
       <Card elevation={5}>
-        <Grid xs={12} md={8} lg={15}>
+        <Grid xs={12} md={8} lg={15} item={true}>
           <CardContent>
             Name:
             <TextField
@@ -72,13 +70,13 @@ export default function EditWishlistCard({
             />
           </CardContent>
           <Button
-            onClick={async () => {
-              await updateWishlistFetcher(id, updatedWishlist);
+            onClick={() => {
+              updateWishlistFetcher(id, updatedWishlist);
             }}
           >
             Submit
           </Button>
-          <EditItemsListModal handleAddToWishlist={handleAddToWishlist} />
+
           {isResponseSuccesful === true && (
             <Alert severity="success">Wishlist succesfully updated</Alert>
           )}

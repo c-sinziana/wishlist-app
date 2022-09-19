@@ -8,9 +8,16 @@ import { User } from "../../api/utils/entities";
 
 type UserCardProp = {
   user: User;
+  isAddUserToGroup: boolean;
+  isUserFromGroup: boolean;
+  handleAddToGroup: (clickedItemId: number) => void;
 };
 
-export default function UserCard({ user }: UserCardProp) {
+export default function UserCard({
+  user,
+  isAddUserToGroup,
+  handleAddToGroup,
+}: UserCardProp) {
   const [isEditing, setIsEditing] = useState(false);
 
   const [isResponseSuccesful, setIsResponseSuccessful] =
@@ -21,20 +28,23 @@ export default function UserCard({ user }: UserCardProp) {
   return (
     <Grid display="flex" flexDirection="column">
       <Card elevation={5}>
-        <Grid xs={12} md={8} lg={15}>
+        <Grid xs={12} md={8} lg={15} item={true}>
           <CardContent key={user.id}>
             <Typography> {user.name}</Typography>
             <Typography> {user.email}</Typography>
             <Typography> {user.dob} </Typography>
             <Typography> {user.phone} </Typography>
-            <Fab
-              size="small"
-              color="primary"
-              onClick={() => addUserToGroup}
-              sx={{ ml: "1rem" }}
-            >
-              <AddIcon />
-            </Fab>
+
+            {isAddUserToGroup && (
+              <Fab
+                size="small"
+                color="primary"
+                onClick={() => handleAddToGroup(user.id)}
+                sx={{ ml: "1rem" }}
+              >
+                <AddIcon />
+              </Fab>
+            )}
           </CardContent>
         </Grid>
       </Card>

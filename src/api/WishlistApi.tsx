@@ -22,7 +22,18 @@ export interface WishlistPutPurchaseItemRequest {
 }
 
 export interface WishlistGetResponse {
-  wishlists: Wishlist[];
+  wishlists: [
+    {
+      id: number;
+      name: string;
+      details: string;
+      items: [
+        {
+          item: Item;
+        }
+      ];
+    }
+  ];
 }
 
 const responseBody = (response: AxiosResponse) => response.data;
