@@ -31,7 +31,7 @@ const RestrictedRoute: React.FC<RestrictedRouteProps> = ({
 }: RestrictedRouteProps) => {
   const loginToken = Cookies.get("token");
 
-  return loginToken !== undefined ? <MyComponent /> : <Navigate to="/" />;
+  return loginToken !== undefined ? <MyComponent /> : <Navigate to="/wishlist-app" />;
 };
 
 export const WishlistRouter = () => {
