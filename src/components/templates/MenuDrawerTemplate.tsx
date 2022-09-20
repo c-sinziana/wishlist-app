@@ -66,7 +66,7 @@ const MenuDrawerTemplate = () => {
                   type="submit"
                   onClick={() => {
                     Cookies.remove("token");
-                    window.location.pathname = "/wishlist-app";
+                    window.location.pathname = "/";
                   }}
                 >
                   Sign out

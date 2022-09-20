@@ -27,7 +27,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               color="inherit"
-              onClick={() => navigate("/wishlist-app/my-notifications")}
+              onClick={() => navigate("/my-notifications")}
             >
               <Badge color="error">
                 <NotificationsIcon />
@@ -36,7 +36,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               edge="end"
-              onClick={() => navigate("/wishlist-app/profile")}
+              onClick={() => navigate("/profile")}
               color="inherit"
             >
               <AccountCircle />
@@ -46,7 +46,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               color="inherit"
-              onClick={() => navigate("/wishlist-app/my-notifications")}
+              onClick={() => navigate("/my-notifications")}
             >
               <Badge color="error">
                 <NotificationsIcon />
@@ -55,7 +55,7 @@ export default function Navbar() {
             <IconButton
               size="large"
               edge="end"
-              onClick={() => navigate("/wishlist-app/profile")}
+              onClick={() => navigate("/profile")}
               color="inherit"
             >
               <AccountCircle />

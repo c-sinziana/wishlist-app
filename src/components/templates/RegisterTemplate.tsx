@@ -53,7 +53,7 @@ export const RegisterTemplate: React.FC = (): React.ReactElement => {
   useEffect(() => {
     if (isResponseSuccesful === true) {
       const timer: NodeJS.Timeout = setTimeout(() => {
-        window.location.pathname = "/wishlist-app/login";
+        window.location.pathname = "/login";
       }, Configs.ALERT_TIMEOUT);
       return () => clearTimeout(timer);
     }

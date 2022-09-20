@@ -22,7 +22,7 @@ const AnonymousUserRoute: React.FC<RestrictedRouteProps> = ({
   return loginToken === undefined ? (
     <MyComponent />
   ) : (
-    <Navigate to="/wishlist-app/my-wishlists" />
+    <Navigate to="/my-wishlists" />
   );
 };
 
@@ -31,39 +31,39 @@ const RestrictedRoute: React.FC<RestrictedRouteProps> = ({
 }: RestrictedRouteProps) => {
   const loginToken = Cookies.get("token");
 
-  return loginToken !== undefined ? <MyComponent /> : <Navigate to="/wishlist-app" />;
+  return loginToken !== undefined ? <MyComponent /> : <Navigate to="/" />;
 };
 
 export const WishlistRouter = () => {
   return (
     <Routes>
       <Route
-        path="/wishlist-app/login"
+        path="/login"
         element={<AnonymousUserRoute MyComponent={LoginPage} />}
       />
       <Route
-        path="/wishlist-app/register"
+        path="/register"
         element={<AnonymousUserRoute MyComponent={RegisterAccountPage} />}
       />
-      <Route path="/wishlist-app" element={<AnonymousUserRoute MyComponent={LoginPage} />} />
+      <Route path="/" element={<AnonymousUserRoute MyComponent={LoginPage} />} />
       <Route
-        path="/wishlist-app/profile"
+        path="/profile"
         element={<RestrictedRoute MyComponent={ProfilePage} />}
       />
       <Route
-        path="/wishlist-app/my-items"
+        path="/my-items"
         element={<RestrictedRoute MyComponent={MyItemsPage} />}
       />
       <Route
-        path="/wishlist-app/my-wishlists"
+        path="/my-wishlists"
         element={<RestrictedRoute MyComponent={MyWishlistPage} />}
       />
       <Route
-        path="/wishlist-app/all-groups"
+        path="/all-groups"
         element={<RestrictedRoute MyComponent={MyGroupsPage} />}
       />
       <Route
-        path="/wishlist-app/my-notifications"
+        path="/my-notifications"
         element={<RestrictedRoute MyComponent={NotificationsPage} />}
       />
     </Routes>

@@ -50,7 +50,7 @@ export const LoginTemplate: React.FC = (): React.ReactElement => {
         if (data.token !== undefined && data.errors === undefined) {
           setIsResponseSuccessful(true);
           Cookies.set("token", data.token, { expires: 0.5 });
-          window.location.pathname = "/wishlist-app/my-wishlists";
+          window.location.pathname = "/my-wishlists";
         } else {
           setIsResponseSuccessful(false);
         }
